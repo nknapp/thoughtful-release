@@ -1,6 +1,6 @@
 # thoughtful-release
 
-> Releases with Though
+> Releases with Thought
 
 
 # Installation
