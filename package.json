@@ -1,0 +1,36 @@
+{
+  "name": "thoughtful-release",
+  "version": "0.0.0",
+  "description": "Releases with Though",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nknapp/thoughtful-release.git"
+  },
+  "author": {
+    "name": "Nils Knappmeier",
+    "email": "npm@knappi.org",
+    "url": "https://github.com/nknapp"
+  },
+  "bugs": {
+    "url": "https://github.com/nknapp/thoughtful-release/issues"
+  },
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "pretest": "standard --version || npm -g install standard",
+    "test": "mocha && standard",
+    "preformat": "standard --version || npm -g install standard",
+    "format": "standard --format"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5"
+  },
+  "standard": {
+    "ignore": [
+      "spec/fixtures/**"
+    ]
+  },
+  "keywords": []
+}
