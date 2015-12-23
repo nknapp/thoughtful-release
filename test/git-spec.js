@@ -16,6 +16,7 @@ var chai = require('chai')
 var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 var expect = chai.expect
+var fs = require("fs");
 
 var git = require('../lib/git.js')
 
@@ -26,9 +27,6 @@ describe('git-library:', () => {
     })
     it('should return true in a directory where .git is a directory', () => {
       expect(git('.').isRepo()).to.eventually.equal(true)
-    })
-    it('should return false in a directory where .git is a file', () => {
-      expect(git('test/fixtures/git-spec').isRepo()).to.eventually.equal(true)
     })
   })
 })
