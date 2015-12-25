@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
 
-if (process.argv[2]=='describe') {
-  console.log('v0.8.3-0-g3f5e3fa')
-}
+require('./mock-kit')({
+  'describe|--long|--match|v*': {
+    stdout: 'v0.8.3-0-g3f5e3fa'
+  }
+})
+
