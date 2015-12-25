@@ -14,7 +14,9 @@ var git = require('../lib/git')('.')
 
 var packageJson = JSON.parse(fs.readFileSync('package.json'))
 git.lastRelease()
-  .then((release) => git.changelog(release.tag, {
-      repoUrl: packageJson.repository.url
-    }))
+  .then((release) => {
+    return git.changelog(release.tag, {
+      url: packageJson.repository.url
+    })
+  })
   .done(console.log)
