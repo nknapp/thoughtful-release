@@ -16,12 +16,11 @@
  *    Keys are process-arguments concatenated by pipes ('|')
  */
 module.exports = function (choices) {
-  var choiceKey = process.argv.slice(2).join('|');
-  var selectedChoice = choices[choiceKey];
+  var choiceKey = process.argv.slice(2).join('|')
+  var selectedChoice = choices[choiceKey]
   if (selectedChoice) {
-    console.log(selectedChoice.stdout);
+    console.log(selectedChoice.stdout)
   } else {
-    console.error(`No choice found for "${choiceKey}"`)
+    console.error(`No choice found for "${choiceKey}" in ${process.argv[1]}`)
   }
 }
-

@@ -5,4 +5,3 @@ require('./mock-kit')({
     stdout: 'v0.8.3-beta-0-g3f5e3fa'
   }
 })
-
