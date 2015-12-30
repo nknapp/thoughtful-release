@@ -34,6 +34,6 @@ function updateChangelog (cwd, release) {
     // Determine changes since current version tag
     return git.changes(releaseTag, { url: repoUrl })
       // Store changelog
-      .then((changes) => changelog.newRelease(version, new Date(), changes)).save()
+      .then((changes) => changelog.newRelease(version, new Date(), changes).save())
   })
 }

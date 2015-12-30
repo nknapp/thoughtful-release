@@ -14,5 +14,9 @@ var program = require('commander')
 program
   .version(require('../package').version)
   .command('changelog <release>')
-  .action((release) => require('../index.js').updateChangelog(process.cwd(), release))
-  .parse(process.argv)
+  .action((release) => {
+    console.log('Updating changelog')
+    require('../index.js').updateChangelog(process.cwd(), release).done(console.log)
+  })
+
+program.parse(process.argv)
