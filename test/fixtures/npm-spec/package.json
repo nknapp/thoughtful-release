@@ -1,0 +1,7 @@
+{
+  "name": "dummy-package",
+  "version": "0.0.1",
+  "repository": {
+    "url": "https://example.com/"
+  }
+}

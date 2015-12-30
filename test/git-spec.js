@@ -48,20 +48,20 @@ describe('git-library:', () => {
   describe('the "changelog"-method', () => {
     it('should call "git log" with the correct parameters and return the plain output', () => {
       process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-v0.8.3.js')
-      return expect(git('test').changelog('v0.8.3'))
+      return expect(git('test').changes('v0.8.3'))
         .to.eventually.equal('log|--no-merges|--pretty=tformat:* %h %s - %an|v0.8.3..\n')
     })
 
     it('should include the repository in the tformat if specified (converting github repository urls into weblinks)', () => {
       process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-v0.8.3.js')
-      return expect(git('test').changelog('v0.8.3', {
+      return expect(git('test').changes('v0.8.3', {
         url: 'git+ssh://github.com/nknapp/bootprint.git'
       })).to.eventually.equal('log|--no-merges|--pretty=tformat:* [%h](https://github.com/nknapp/bootprint/commit/%h) %s - %an|v0.8.3..\n')
     })
 
     it('should include the target commit in the git-call if present', () => {
       process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-v0.8.3.js')
-      return expect(git('test').changelog('v0.8.3', {
+      return expect(git('test').changes('v0.8.3', {
         to: 'v0.8.5'
       })).to.eventually.equal('log|--no-merges|--pretty=tformat:* %h %s - %an|v0.8.3..v0.8.5\n')
     })
