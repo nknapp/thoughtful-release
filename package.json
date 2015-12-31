@@ -15,6 +15,9 @@
     "url": "https://github.com/nknapp/thoughtful-release/issues"
   },
   "main": "index.js",
+  "bin": {
+    "thoughtful": "bin/thoughtful.js"
+  },
   "license": "MIT",
   "scripts": {
     "pretest": "standard --version || npm -g install standard",
