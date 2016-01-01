@@ -6,6 +6,7 @@
  */
 
 /* global describe */
+/* global afterEach */
 /* global it */
 // /* global xdescribe */
 // /* global xit */
@@ -20,6 +21,10 @@ var path = require('path')
 var git = require('../lib/git.js')
 
 describe('git-library:', () => {
+  afterEach(() => {
+    process.env['THOUGHTFUL_GIT_CMD'] = ''
+    delete process.env['THOUGHTFUL_GIT_CMD']
+  })
   describe('the "isRepo"-method', () => {
     it('should return false in a directory where .git does not exist', () => {
       return expect(git('test').isRepo()).to.eventually.equal(false)
