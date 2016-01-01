@@ -1,6 +1,12 @@
 # Release-Notes
 
 <a name="current-release"></a>
+# Version 0.0.3 (2016-01-02)
+
+* [c7489f2](https://github.com/nknapp/thoughtful-release/commit/c7489f2) [Fix] Documentation typos - Nils Knappmeier
+
+
+
 # Version 0.0.2 (2016-01-02)
 
 * [bba6da6](https://github.com/nknapp/thoughtful-release/commit/bba6da6) Meaningful output after "thoughtful changelog" - Nils Knappmeier
