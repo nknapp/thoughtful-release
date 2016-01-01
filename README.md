@@ -9,7 +9,7 @@ template modules and then extracted multiple modules (i.e. the `customize-`famil
 it was easy to implement [thought](https://npmjs.com/package/thought) on this basis as well. 
 
 The problem is, that now there are 10 modules to maintain instead of just one. The overhead for releasing new 
-versions is about the same for each packages. This module is a toolkit to make the following tasks easier, thus
+versions is about the same for each package. This module is a toolkit to make the following tasks easier, thus
 increasing the package quality and reducing the workload for a release:
 
 * **Generate changelog**: Changelog generation is inspired by the [Ghost git workflow](https://github.com/TryGhost/Ghost/wiki/Git-workflow)
@@ -67,7 +67,7 @@ Be sure not to modify the placeholder `<a name="current-release"></a>` in the fi
 is the point where new releases are inserted.
 
 The section-header for the current changelog-entry will be the next version, determined by the `release`-parameter.
-The paramater can be a version bump (`major`, `minor`, `bugfix`,...) or a valid semver-number. Possible values
+The paramater can be a version bump (`major`, `minor`, `patch`,...) or a valid semver-number. Possible values
 are the same as the values for the [npm version](https://docs.npmjs.com/cli/version)-command.
 
 
