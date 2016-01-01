@@ -33,6 +33,9 @@ describe('The npm-helper lib:', () => {
     it('should return the incremented version if the parameter is "patch"', () => {
       return expect(npmModule.incVersion('patch')).to.eventually.equal('0.0.2')
     })
+    it('should fail if the parameter is invalid (e.g. "bugfix"', () => {
+      return expect(npmModule.incVersion('bugfix')).to.be.rejectedWith(Error)
+    })
   })
 
   describe('the repository url', () => {
