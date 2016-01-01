@@ -36,14 +36,12 @@ Usage: thoughtful [options] [command]
 
   Commands:
 
-    changelog <release>  update the CHANGELOG.md of the module in the current directory
-    help [cmd]           display help for [cmd]
+    changelog [options] <release>  update the CHANGELOG.md of the module in the current directory
 
   Options:
 
     -h, --help     output usage information
     -V, --version  output the version number
-    <release>      The target release of the changelog (same as for "npm version")
 ```
 
 #### Updating the changelog
