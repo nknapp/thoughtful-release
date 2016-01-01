@@ -13,7 +13,8 @@ var program = require('commander')
 
 program
   .version(require('../package').version)
-  .command('changelog <release>', 'update the CHANGELOG.md of the module in the current directory')
+  .command('changelog <release>')
+  .description('update the CHANGELOG.md of the module in the current directory')
   .option('<release>', 'The target release of the changelog (same as for "npm version")')
   .action((release) => {
     console.log('Updating changelog')
@@ -21,3 +22,8 @@ program
   })
 
 program.parse(process.argv)
+
+if (process.argv.length === 2) {
+  // No args provided: Display help
+  program.outputHelp()
+}
