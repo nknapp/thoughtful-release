@@ -30,10 +30,10 @@ function updateChangelog (cwd, release) {
   // Determine next version
   var versionP = npm.incVersion(release)
   // Determine current version tag
-  var releaseTagP = git.lastRelease()
-  return Q.all([versionP, releaseTagP, npm.repositoryUrl]).spread((version, releaseTag, repoUrl) => {
+  var releaseInfoP = git.lastRelease()
+  return Q.all([versionP, releaseInfoP, npm.repositoryUrl]).spread((version, releaseInfo, repoUrl) => {
     // Determine changes since current version tag
-    return git.changes(releaseTag, { url: repoUrl })
+    return git.changes(releaseInfo.tag, { url: repoUrl })
       // Store changelog
       .then((changes) => changelog.newRelease(version, new Date(), changes).save())
   })
