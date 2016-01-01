@@ -31,10 +31,12 @@ function updateChangelog (cwd, release) {
   var versionP = npm.incVersion(release)
   // Determine current version tag
   var releaseInfoP = git.lastRelease()
-  return Q.all([versionP, releaseInfoP, npm.repositoryUrl]).spread((version, releaseInfo, repoUrl) => {
-    // Determine changes since current version tag
-    return git.changes(releaseInfo.tag, { url: repoUrl })
-      // Store changelog
-      .then((changes) => changelog.newRelease(version, new Date(), changes).save())
-  })
+  return Q.all([versionP, releaseInfoP, npm.repositoryUrl])
+    .spread((version, releaseInfo, repoUrl) => {
+      // Determine changes since current version tag
+      return git.changes(releaseInfo.tag, {url: repoUrl})
+        // Store changelog
+        .then((changes) => changelog.newRelease(version, new Date(), changes).save())
+        .then(() => `Updated CHANGELOG.md for version ${version}`)
+    })
 }
