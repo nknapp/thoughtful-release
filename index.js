@@ -16,6 +16,7 @@ module.exports = {
 }
 
 /**
+ * Update the CHANGELOG.md of the module in the given working directory.
  *
  * @param {string} cwd the current working directory of the module
  * @param {string} release the release specification (as in `npm version`)

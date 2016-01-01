@@ -1,0 +1,32 @@
+### CLI options
+
+Calling `thoughtful --help` will print a command-line reference:
+
+{{{exec 'bin/thoughtful.js --help'}}}
+
+#### Updating the changelog
+
+`thoughtful changelog` will generate a changelog from the git-history of the project,
+summarizing changes since the last release-tag (one line per commit). It uses 
+[this gist by @ErisDS](https://gist.github.com/ErisDS/23fcb4d2047829ec80f4)
+as inspiration. A clean git-history is a prerequisite for generating a changelog like this.
+I think the rules for the [Ghost git-workflow rules](https://github.com/TryGhost/Ghost/wiki/Git-workflow)
+are well suited for this purpose.
+In particular the following parts should be followed when using `thoughtful` to generate a changelog:
+
+* "Always work on a branch" and never submit to `master` directly.
+* [Clean up the git history](https://github.com/TryGhost/Ghost/wiki/Git-workflow#clean-up-history) 
+  before merging to master so that on feature or bugfix finally consists of a single commit.
+* Follow a specific [format for commit messages], most importantly the commit summary on the first line
+  (the first line is what `thoughtful` uses for the changelog).
+
+Release tags are annotated tags that match of the form `v*` (like `v1.3.0` or `v1.5.0.beta-1`).
+
+If no file `CHANGELOG.md` exists in your project, the command will create one from a template. 
+Be sure not to modify the placeholder `<a name="current-release"></a>` in the file, since this 
+is the point where new releases are inserted.
+
+The section-header for the current changelog-entry will be the next version, determined by the `release`-parameter.
+The paramater can be a version bump (`major`, `minor`, `bugfix`,...) or a valid semver-number. Possible values
+are the same as the values for the [npm version](https://docs.npmjs.com/cli/version)-command.
+

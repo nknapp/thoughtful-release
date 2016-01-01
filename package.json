@@ -1,7 +1,7 @@
 {
   "name": "thoughtful-release",
   "version": "0.0.1",
-  "description": "Releases with Thought",
+  "description": "Create high quality releases with less work",
   "repository": {
     "type": "git",
     "url": "https://github.com/nknapp/thoughtful-release.git"
@@ -18,6 +18,7 @@
   "bin": {
     "thoughtful": "bin/thoughtful.js"
   },
+  "preferGlobal": true,
   "license": "MIT",
   "scripts": {
     "pretest": "standard --version || npm -g install standard",

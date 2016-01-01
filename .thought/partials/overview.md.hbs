@@ -1,0 +1,17 @@
+People like **substack** encourage you to divide 
+the functionality of large monolithic modules into reasonable parts and publish each of those as module on 
+there own. That's what I did when I separated {{npm 'swagger-to-html'}} into {{npm 'bootprint'}} and three
+template modules and then extracted multiple modules (i.e. the `customize-`family) from `bootprint`, so that
+it was easy to implement {{npm 'thought'}} on this basis as well. 
+
+The problem is, that now there are 10 modules to maintain instead of just one. The overhead for releasing new 
+versions is about the same for each packages. This module is a toolkit to make the following tasks easier, thus
+increasing the package quality and reducing the workload for a release:
+
+* **Generate changelog**: Changelog generation is inspired by the [Ghost git workflow](https://github.com/TryGhost/Ghost/wiki/Git-workflow)
+* **QA git hooks**: (not yet implemented) Mechanism to register a pre-commit and a pre-push hook so to
+    avoid working on the master branch and to ensure the code-style of the project
+* **Git workflow**: (not yet implemented) Tools for creating a new branch and cleaning up the history before merging to master
+* **Release workflow**: (not yet implemented) A command to run tests, generate changelog, bump versions and publish to npm,
+    similar to the {{npm 'release-tools'}}-package
+
