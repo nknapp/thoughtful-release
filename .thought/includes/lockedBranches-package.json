@@ -1,0 +1,7 @@
+{
+  "name": "example",
+  "version": "0.0.1",
+  "thoughtful": {
+    "lockedBranches": [ "lockedBranch1", "lockedBranch2" ]
+  }
+}

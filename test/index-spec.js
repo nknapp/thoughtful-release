@@ -10,6 +10,7 @@
 // /* global xdescribe */
 // /* global xit */
 /* global beforeEach */
+/* global afterEach */
 
 'use strict'
 
@@ -24,7 +25,7 @@ var _ = require('lodash')
 
 delete process.env['THOUGHTFUL_GIT_CMDcd']
 
-var thoughtful = require('../')
+var Thoughtful = require('../')
 
 function fixture (filename) {
   return require('fs').readFileSync(path.join('test', 'fixtures', filename), {encoding: 'utf-8'})
@@ -58,6 +59,12 @@ describe('main-module:', () => {
     return path.join.apply(path, ['tmp', 'test', 'index-js'].concat(argsAsArray))
   }
 
+  /**
+   *
+   * @type {Thoughtful}
+   */
+  var thoughtful = new Thoughtful(workDir())
+
   // Clear the working directory before each test
   beforeEach(() => {
     return qfs.removeTree(workDir())
@@ -78,28 +85,52 @@ describe('main-module:', () => {
       })
       .then(() => qcp.execFile('git', ['add', 'package.json'], {cwd: workDir()}))
       .then(() => qcp.execFile('git', ['commit', '-m', 'Added package.json'], {cwd: workDir()}))
+      .then(() => thoughtful.reset())
   })
 
   describe('the updateChangelog-method', () => {
     it('should create an initial CHANGELOG.md file for a first release', () => {
-      var changelogContents = thoughtful.updateChangelog(workDir(), 'minor')
+      var changelogContents = thoughtful.updateChangelog('minor')
         .then(() => qfs.read(workDir('CHANGELOG.md')))
       return expect(changelogContents).to.eventually.match(regexFixture('index-spec/CHANGELOG-first.md'))
     })
 
     it('should update CHANGELOG.md file for a second release', () => {
       // Update changelog and bump version
-      var changelogContents = thoughtful.updateChangelog(workDir(), 'minor')
+      var changelogContents = thoughtful.updateChangelog('minor')
         .then(() => qcp.execFile('npm', ['version', 'minor'], {cwd: workDir()}))
         // Add another file
         .then(() => qfs.write(workDir('index.js'), "'use strict'"))
         .then(() => qcp.execFile('git', ['add', 'index.js'], {cwd: workDir()}))
         .then(() => qcp.execFile('git', ['commit', '-m', 'Added index.js'], {cwd: workDir()}))
         // Update changelog again and load contents
-        .then(() => thoughtful.updateChangelog(workDir(), 'patch'))
+        .then(() => thoughtful.updateChangelog('patch'))
         .then(() => qfs.read(workDir('CHANGELOG.md')))
 
       return expect(changelogContents).to.eventually.match(regexFixture('index-spec/CHANGELOG-second.md'))
+    })
+  })
+
+  describe('the rejectLockedBranches-method', () => {
+    afterEach(() => {
+      process.env['THOUGHTFUL_ALLOW_LOCKED_BRANCHES'] = ''
+      delete process.env['THOUGHTFUL_ALLOW_LOCKED_BRANCHES']
+    })
+
+    it('should reject the master branch by default', () => {
+      return expect(thoughtful.rejectLockedBranches()).to.be.rejectedWith(Error)
+    })
+
+    it('should not reject the branch "feature" by default', () => {
+      var check = qcp.execFile('git', ['branch', 'feature'], {cwd: workDir()})
+        .then(() => qcp.execFile('git', ['checkout', 'feature'], {cwd: workDir()}))
+        .then(() => thoughtful.rejectLockedBranches())
+      return expect(check).to.eventually.be.equal(true)
+    })
+
+    it('should not reject the master branch if THOUGHTFUL_ALLOW_LOCKED_BRANCHES=true', () => {
+      process.env['THOUGHTFUL_ALLOW_LOCKED_BRANCHES'] = 'true'
+      return expect(thoughtful.rejectLockedBranches()).to.eventually.equal(true)
     })
   })
 })

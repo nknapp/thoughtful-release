@@ -9,7 +9,9 @@
 
 'use strict'
 
-var program = require('commander')
+const program = require('commander')
+const Thoughtful = require('../index.js')
+const thoughtful = new Thoughtful(process.cwd())
 
 program
   .version(require('../package').version)
@@ -18,7 +20,15 @@ program
   .option('<release>', 'The target release of the changelog (same as for "npm version")')
   .action((release) => {
     console.log('Updating changelog')
-    require('../index.js').updateChangelog(process.cwd(), release).done(console.log)
+    thoughtful.updateChangelog(release).done(console.log)
+  })
+
+program
+  .version(require('../package').version)
+  .command('precommit')
+  .description('Perform precommit-checks (locked branches...). Return non-zero exit-code if something is wrong')
+  .action(() => {
+    thoughtful.rejectLockedBranches().done(console.log)
   })
 
 program.parse(process.argv)

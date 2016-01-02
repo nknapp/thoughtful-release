@@ -37,10 +37,12 @@ Usage: thoughtful [options] [command]
   Commands:
 
     changelog [options] <release>  update the CHANGELOG.md of the module in the current directory
+    precommit                      Perform precommit-checks (locked branches...). Return non-zero exit-code if something is wrong
 
   Options:
 
     -h, --help     output usage information
+    -V, --version  output the version number
     -V, --version  output the version number
 ```
 
@@ -70,20 +72,87 @@ The section-header for the current changelog-entry will be the next version, det
 The paramater can be a version bump (`major`, `minor`, `patch`,...) or a valid semver-number. Possible values
 are the same as the values for the [npm version](https://docs.npmjs.com/cli/version)-command.
 
+#### Thoughtful pre-commit hooks
+
+The command `thoughtful precommit` will execute precommit hooks. You can register this command (manually) 
+as pre-commit-hook for your repository by adding a file `.git/hooks/pre-commit` to your project with 
+the following contents
+
+```bash
+#!/bin/sh
+
+exec thoughtful precommit
+```
+
+Execute-permissions must be set for this file.
+
+The command will do the following tasks:
+
+* Reject commits to the locked branches. If nothing is configured in the `package.json`, then the 
+  `master`-branch is a locked branch. In the following example, `master` is not locked, but `lockedBranch1`
+  and `lockedBranch2` is locked instead.
+
+```json
+{
+  "name": "example",
+  "version": "0.0.1",
+  "thoughtful": {
+    "lockedBranches": [ "lockedBranch1", "lockedBranch2" ]
+  }
+}
+```
+
+
+* Execute custom pre-commit hooks (not yet implemented). In the future, `thoughtful precommit` will additionally
+  execute the `pre-commit` script defined in the `package.json`. This can be used to enforce coding-styles
+  (I use [standard](https://npmjs.com/package/standard)) and/or unit tests.
+
 
 ##  API-reference
 
-<a name="updateChangelog"></a>
-### updateChangelog(cwd, release) ⇒ <code>\*</code>
-Update the CHANGELOG.md of the module in the given working directory.
+<a name="Thoughtful"></a>
+### Thoughtful
+**Kind**: global class  
 
-**Kind**: global function  
+* [Thoughtful](#Thoughtful)
+  * [new Thoughtful(cwd)](#new_Thoughtful_new)
+  * [.updateChangelog(release)](#Thoughtful+updateChangelog) ⇒ <code>Promise.&lt;?&gt;</code>
+  * [.rejectLockedBranches()](#Thoughtful+rejectLockedBranches) ⇒ <code>Promise.&lt;boolean&gt;</code>
+  * [.reset()](#Thoughtful+reset)
+
+<a name="new_Thoughtful_new"></a>
+#### new Thoughtful(cwd)
+Return a new Thoughtful instance
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| cwd | <code>string</code> | the current working directory of the module |
+| cwd | <code>string</code> | the working directory of that instance |
+
+<a name="Thoughtful+updateChangelog"></a>
+#### thoughtful.updateChangelog(release) ⇒ <code>Promise.&lt;?&gt;</code>
+Update the CHANGELOG.md of the module in the given working directory.
+
+**Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
+**Returns**: <code>Promise.&lt;?&gt;</code> - a promise for finishing writing the changelog  
+
+| Param | Type | Description |
+| --- | --- | --- |
 | release | <code>string</code> | the release specification (as in `npm version`) |
 
+<a name="Thoughtful+rejectLockedBranches"></a>
+#### thoughtful.rejectLockedBranches() ⇒ <code>Promise.&lt;boolean&gt;</code>
+Throw an exception if the current branch is listed in `package.json` under
+`$.thoughtful.lockedBranches`
+
+**Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
+**Returns**: <code>Promise.&lt;boolean&gt;</code> - true, if the branch is not locked.  
+**Throw**: <code>Error</code> if the branch is locked  
+<a name="Thoughtful+reset"></a>
+#### thoughtful.reset()
+Reset and reload the cached parts of Thoughtful
+
+**Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
 
 
 

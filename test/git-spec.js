@@ -71,4 +71,11 @@ describe('git-library:', () => {
       })).to.eventually.equal('log|--no-merges|--pretty=tformat:* %h %s - %an|v0.8.3..v0.8.5\n')
     })
   })
+
+  describe('the currentBranch-method', () => {
+    it('should call "git symbolic-ref --short HEAD" to determine the branch', () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-branch-feature.js')
+      return expect(git('test').currentBranch()).to.eventually.equal('feature')
+    })
+  })
 })

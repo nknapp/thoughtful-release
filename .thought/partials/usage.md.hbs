@@ -30,3 +30,41 @@ The section-header for the current changelog-entry will be the next version, det
 The paramater can be a version bump (`major`, `minor`, `patch`,...) or a valid semver-number. Possible values
 are the same as the values for the [npm version](https://docs.npmjs.com/cli/version)-command.
 
+#### Thoughtful pre-commit hooks
+
+The command `thoughtful precommit` will execute precommit hooks. You can register this command (manually) 
+as pre-commit-hook for your repository by adding a file `.git/hooks/pre-commit` to your project with 
+the following contents
+
+```bash
+#!/bin/sh
+
+exec thoughtful precommit
+```
+
+Execute-permissions must be set for this file.
+
+The command will do the following tasks:
+
+* **Reject commits to the locked branches.** If nothing is configured in the `package.json`, then the 
+  `master`-branch is a locked branch. In the following example, `master` is not locked, but `lockedBranch1`
+  and `lockedBranch2` is locked instead.
+
+{{include '.thought/includes/lockedBranches-package.json'}}
+
+* **Execute custom pre-commit hooks (not yet implemented).** In the future, `thoughtful precommit` will additionally
+  execute the `pre-commit` script defined in the `package.json`. This can be used to enforce coding-styles
+  (I use {{npm 'standard'}}) and/or unit tests.
+
+##### Release new versions with pre-commit hook
+
+When the pre-commit hook is activated, you may have difficulties releasing new versions of your module, because
+`npm version` attempts to commit the version-bump to the `master`-branch. `thoughtful precommit` can be disabled
+temporarily by settings the environment variable `THOUGHTFUL_ALLOW_LOCKED_BRANCHES=true`. 
+In other words, you now need to all
+
+```bash
+THOUGHTFUL_ALLOW_LOCKED_BRANCHES=true npm version minor
+```
+
+to bump the minor version number and commit the change to the repository.
