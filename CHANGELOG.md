@@ -1,6 +1,12 @@
 # Release-Notes
 
 <a name="current-release"></a>
+# Version 0.1.0 (2016-01-04)
+
+* [c19a23e](https://github.com/nknapp/thoughtful-release/commit/c19a23e) Added command 'precommit' to execute check for locked branches (breaking change) - Nils Knappmeier
+
+
+
 # Version 0.0.3 (2016-01-02)
 
 * [c7489f2](https://github.com/nknapp/thoughtful-release/commit/c7489f2) [Fix] Documentation typos - Nils Knappmeier
