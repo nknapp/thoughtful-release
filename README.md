@@ -88,7 +88,7 @@ Execute-permissions must be set for this file.
 
 The command will do the following tasks:
 
-* Reject commits to the locked branches. If nothing is configured in the `package.json`, then the 
+* **Reject commits to the locked branches.** If nothing is configured in the `package.json`, then the 
   `master`-branch is a locked branch. In the following example, `master` is not locked, but `lockedBranch1`
   and `lockedBranch2` is locked instead.
 
@@ -103,10 +103,22 @@ The command will do the following tasks:
 ```
 
 
-* Execute custom pre-commit hooks (not yet implemented). In the future, `thoughtful precommit` will additionally
+* **Execute custom pre-commit hooks (not yet implemented).** In the future, `thoughtful precommit` will additionally
   execute the `pre-commit` script defined in the `package.json`. This can be used to enforce coding-styles
   (I use [standard](https://npmjs.com/package/standard)) and/or unit tests.
 
+##### Release new versions with pre-commit hook
+
+When the pre-commit hook is activated, you may have difficulties releasing new versions of your module, because
+`npm version` attempts to commit the version-bump to the `master`-branch. `thoughtful precommit` can be disabled
+temporarily by settings the environment variable `THOUGHTFUL_ALLOW_LOCKED_BRANCHES=true`. 
+In other words, you now need to all
+
+```bash
+THOUGHTFUL_ALLOW_LOCKED_BRANCHES=true npm version minor
+```
+
+to bump the minor version number and commit the change to the repository.
 
 ##  API-reference
 
@@ -143,7 +155,10 @@ Update the CHANGELOG.md of the module in the given working directory.
 <a name="Thoughtful+rejectLockedBranches"></a>
 #### thoughtful.rejectLockedBranches() ⇒ <code>Promise.&lt;boolean&gt;</code>
 Throw an exception if the current branch is listed in `package.json` under
-`$.thoughtful.lockedBranches`
+`$.thoughtful.lockedBranches`.
+
+The branch check can be disabled by setting the environment variable
+`THOUGHTFUL_ALLOW_LOCKED_BRANCHES=true`
 
 **Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
 **Returns**: <code>Promise.&lt;boolean&gt;</code> - true, if the branch is not locked.  
