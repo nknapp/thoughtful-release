@@ -10,7 +10,9 @@
 'use strict'
 
 var Q = require('q')
-var _ = require('lodash')
+var _ = {
+  contains: require('lodash.contains')
+}
 
 module.exports = Thoughtful
 

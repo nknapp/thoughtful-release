@@ -21,7 +21,9 @@ var expect = chai.expect
 var qcp = require('../lib/q-child-process')
 var qfs = require('q-io/fs')
 var path = require('path')
-var _ = require('lodash')
+var _ = {
+  escapeRegExp: require('lodash.escaperegexp')
+}
 
 delete process.env['THOUGHTFUL_GIT_CMDcd']
 

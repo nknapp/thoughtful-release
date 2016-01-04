@@ -33,7 +33,11 @@
   },
   "dependencies": {
     "commander": "^2.9.0",
-    "lodash": "^3.10.1",
+    "lodash.contains": "^2.4.3",
+    "lodash.defaults": "^3.1.2",
+    "lodash.defaultsdeep": "^3.10.0",
+    "lodash.isstring": "^3.0.1",
+    "lodash.toarray": "^3.0.2",
     "q": "^1.4.1",
     "q-io": "^1.13.2",
     "semver": "^5.1.0"
@@ -43,7 +47,8 @@
     "chai-as-promised": "^5.2.0",
     "ghooks": "^1.0.1",
     "mocha": "^2.2.5",
-    "sinon": "^1.17.2"
+    "sinon": "^1.17.2",
+    "lodash.escaperegexp": "^3.0.1"
   },
   "standard": {
     "ignore": [
