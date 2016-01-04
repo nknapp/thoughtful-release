@@ -49,6 +49,11 @@
     "mocha": "^2.2.5",
     "lodash.escaperegexp": "^3.0.1"
   },
+  "files": [
+    "bin",
+    "lib",
+    "LICENSE.md"
+  ],
   "standard": {
     "ignore": [
       "spec/fixtures/**"
