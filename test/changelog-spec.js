@@ -41,7 +41,7 @@ describe('changelog-library:', () => {
 
   describe('the newRelease-method', () => {
     it('should add the data of a new release', () => {
-      var cl = changelog('test').newRelease('1.0.0', new Date(2015, 9, 2, 0, 0, 0, 0), '* [Fix] Test')
+      var cl = changelog('test').newRelease('1.0.0', new Date('2015-10-02T13:05:00Z'), '* [Fix] Test')
       return expect(cl.contents).to.eventually.equal(fixture('changelog-with-a-release.md'))
     })
   })
@@ -81,7 +81,7 @@ describe('changelog-library:', () => {
     it('should be able to load a CHANGELOG.md and store a modified version', () => {
       var changelogContents = qfs.copy('test/fixtures/changelog-with-a-release.md', workDir('CHANGELOG.md'))
         .then(() => changelog(workDir())
-            .newRelease('2.0.0', new Date(2015, 11, 25, 0, 0, 0, 0), '* Change 1\n* Change 2')
+            .newRelease('2.0.0', new Date('2015-11-25T13:06:00Z'), '* Change 1\n* Change 2')
             .save())
         .then(() => qfs.read(workDir('CHANGELOG.md')))
       return expect(changelogContents).to.eventually.equal(fixture('changelog-with-two-releases.md'))
