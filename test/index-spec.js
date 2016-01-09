@@ -115,8 +115,8 @@ describe('main-module:', () => {
 
   describe('the rejectLockedBranches-method', () => {
     afterEach(() => {
-      process.env['THOUGHTFUL_ALLOW_LOCKED_BRANCHES'] = ''
-      delete process.env['THOUGHTFUL_ALLOW_LOCKED_BRANCHES']
+      process.env['THOUGHTFUL_LOCKED_BRANCHES'] = ''
+      delete process.env['THOUGHTFUL_LOCKED_BRANCHES']
     })
 
     it('should reject the master branch by default', () => {
@@ -130,8 +130,8 @@ describe('main-module:', () => {
       return expect(check).to.eventually.be.equal(true)
     })
 
-    it('should not reject the master branch if THOUGHTFUL_ALLOW_LOCKED_BRANCHES=true', () => {
-      process.env['THOUGHTFUL_ALLOW_LOCKED_BRANCHES'] = 'true'
+    it('should not reject the master branch if THOUGHTFUL_LOCKED_BRANCHES=false', () => {
+      process.env['THOUGHTFUL_LOCKED_BRANCHES'] = 'false'
       return expect(thoughtful.rejectLockedBranches()).to.eventually.equal(true)
     })
   })

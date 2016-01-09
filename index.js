@@ -56,13 +56,13 @@ function Thoughtful (cwd) {
    * `$.thoughtful.lockedBranches`.
    *
    * The branch check can be disabled by setting the environment variable
-   * `THOUGHTFUL_ALLOW_LOCKED_BRANCHES=true`
+   * `THOUGHTFUL_LOCKED_BRANCHES=false`
    *
    * @returns {Promise.<boolean>} true, if the branch is not locked.
    * @throw {Error} if the branch is locked
    */
   this.rejectLockedBranches = function rejectLockedBranches () {
-    if (process.env['THOUGHTFUL_ALLOW_LOCKED_BRANCHES'] === 'true') {
+    if (process.env['THOUGHTFUL_LOCKED_BRANCHES'] === 'false') {
       return Q(true)
     }
     this.reset()

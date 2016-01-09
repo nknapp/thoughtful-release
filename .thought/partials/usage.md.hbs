@@ -60,11 +60,11 @@ The command will do the following tasks:
 
 When the pre-commit hook is activated, you may have difficulties releasing new versions of your module, because
 `npm version` attempts to commit the version-bump to the `master`-branch. `thoughtful precommit` can be disabled
-temporarily by settings the environment variable `THOUGHTFUL_ALLOW_LOCKED_BRANCHES=true`. 
-In other words, you now need to all
+temporarily by settings the environment variable `THOUGHTFUL_LOCKED_BRANCHES=false`. 
+In other words, you now need to call
 
 ```bash
-THOUGHTFUL_ALLOW_LOCKED_BRANCHES=true npm version minor
+THOUGHTFUL_LOCKED_BRANCHES=false npm version minor
 ```
 
 to bump the minor version number and commit the change to the repository.
