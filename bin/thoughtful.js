@@ -24,11 +24,24 @@ program
   })
 
 program
-  .version(require('../package').version)
   .command('precommit')
   .description('Perform precommit-checks (locked branches...). Return non-zero exit-code if something is wrong')
   .action(() => {
     thoughtful.rejectLockedBranches().done(console.log)
+  })
+
+program
+  .command('sequence-editor <filename>')
+  .description('"Editor" for the rebase todos (replacing "pick" with "squash") with no interaction')
+  .action((filename) => {
+    thoughtful.sequenceEditor(filename).done(() => console.log(`File ${filename} written.`))
+  })
+
+program
+  .command('cleanup-history [target-branch]')
+  .description('Rebase the current branch onto another branch, condensing the whole branch into a single commit.')
+  .action((targetBranch) => {
+    thoughtful.cleanupHistory({targetBranch: targetBranch}).done(() => console.log(`Cleanup complete`))
   })
 
 program.parse(process.argv)

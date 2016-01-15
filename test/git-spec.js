@@ -19,6 +19,8 @@ chai.use(chaiAsPromised)
 var expect = chai.expect
 var path = require('path')
 var git = require('../lib/git.js')
+var qfs = require('q-io/fs')
+var Q = require('q')
 
 describe('git-library:', () => {
   afterEach(() => {
@@ -76,6 +78,32 @@ describe('git-library:', () => {
     it('should call "git symbolic-ref --short HEAD" to determine the branch', () => {
       process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-branch-feature.js')
       return expect(git('test').currentBranch()).to.eventually.equal('feature')
+    })
+  })
+
+  describe('the squashRebaseTodo-method', () => {
+    it('should replace all "pick" with "squash" in the file, except the first one', () => {
+      var actual = qfs.makeTree('tmp/git-squash-rebase-todo')
+        .then(() => qfs.copy('test/fixtures/git-rebase-todo.txt', 'tmp/git-squash-rebase-todo/git-rebase-todo.txt'))
+        .then(() => git('test').squashRebaseTodos('tmp/git-squash-rebase-todo/git-rebase-todo.txt'))
+        .then(() => qfs.read('tmp/git-squash-rebase-todo/git-rebase-todo.txt'))
+      var expected = qfs.read('test/fixtures/git-rebase-todo-target.txt')
+      return Q.all([actual, expected])
+        .spread((actual, expected) => expect(actual).to.equal(expected))
+    })
+  })
+
+  describe('the cleanupHistory-method', () => {
+    it('should rebase and squash the branch onto master by default', () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-v0.8.3.js')
+      return expect(git('test').cleanupHistory({thoughtful: 'thoughtful'}))
+        .to.eventually.equal('Tagging thoughtful-backup\nRebase on master')
+    })
+
+    it('should rebase and squash the branch onto stable if specified as targetBranch', () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-v0.8.3.js')
+      return expect(git('test').cleanupHistory({targetBranch: 'stable', thoughtful: 'thoughtful'}))
+        .to.eventually.equal('Tagging thoughtful-backup\nRebase on stable')
     })
   })
 })

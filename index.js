@@ -13,6 +13,7 @@ var Q = require('q')
 var _ = {
   contains: require('lodash.contains')
 }
+var path = require('path')
 
 module.exports = Thoughtful
 
@@ -76,6 +77,33 @@ function Thoughtful (cwd) {
         }
         return true
       })
+  }
+
+  /**
+   * For use with "git -c sequence.editor=..." when rebasing and squashing feature-branches
+   *
+   * Replace "pick" commits in rebase-todo-file by "squash" (except the first).
+   *
+   * @param filename the name of the file to be edited
+   */
+  this.sequenceEditor = function (filename) {
+    switch (path.basename(filename)) {
+      case 'git-rebase-todo':
+        return git.squashRebaseTodos(filename)
+      default:
+        throw new Error('Unexpected file edited in sequence editor: ' + filename)
+    }
+  }
+
+  /**
+   * Perform a rebase of the current (topic-)branch onto a target-branch, condensing the
+   * whole branch into a single commit.
+   * @param {object} options options to this function
+   * @param {string=} options.targetBranch the branch to rebase the current branch upon (default: master)
+   * @param {string=} options.thoughtful the command to invoke "thoughtful" (default: process.argv[1])
+   */
+  this.cleanupHistory = function (options) {
+    return git.cleanupHistory(options)
   }
 
   /**

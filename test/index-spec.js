@@ -22,7 +22,8 @@ var qcp = require('../lib/q-child-process')
 var qfs = require('q-io/fs')
 var path = require('path')
 var _ = {
-  escapeRegExp: require('lodash.escaperegexp')
+  escapeRegExp: require('lodash.escaperegexp'),
+  toArray: require('lodash.toarray')
 }
 
 delete process.env['THOUGHTFUL_GIT_CMDcd']
@@ -57,8 +58,7 @@ describe('main-module:', () => {
    *
    */
   function workDir () {
-    const argsAsArray = Array.prototype.slice.apply(arguments)
-    return path.join.apply(path, ['tmp', 'test', 'index-js'].concat(argsAsArray))
+    return path.join.apply(path, ['tmp', 'test', 'index-js'].concat(_.toArray(arguments)))
   }
 
   /**
@@ -66,6 +66,17 @@ describe('main-module:', () => {
    * @type {Thoughtful}
    */
   var thoughtful = new Thoughtful(workDir())
+
+  function git () {
+    return qcp.execFile('git', _.toArray(arguments), {cwd: workDir()})
+  }
+
+  function gitCommit (file, contents, message) {
+    return qfs.write(workDir(file), contents)
+      .then(() => qcp.execFile('ls', ['-l'], { cwd: workDir() }))
+      .then(() => git('add', file))
+      .then(() => git('commit', '-a', '-m', message))
+  }
 
   // Clear the working directory before each test
   beforeEach(() => {
@@ -133,6 +144,44 @@ describe('main-module:', () => {
     it('should not reject the master branch if THOUGHTFUL_LOCKED_BRANCHES=false', () => {
       process.env['THOUGHTFUL_LOCKED_BRANCHES'] = 'false'
       return expect(thoughtful.rejectLockedBranches()).to.eventually.equal(true)
+    })
+  })
+
+  describe('the cleanupHistory-method', () => {
+    it('should rebase a branch onto the master ', () => {
+      // Git editor command that does not modify the commit message and works on all platforms
+      process.env['GIT_EDITOR'] = `${require.resolve('./dummy-git/commit-editor.js')} "Rebased commit"`
+      thoughtful.reset()
+      // Test setup: two feature branches forked from master~1
+      return git('branch', 'feature1')
+        .then(() => gitCommit('file1.txt', 'abc', 'Added file1.txt'))
+        .then(() => git('checkout', 'feature1'))
+        .then(() => gitCommit('file2.txt', 'file2-added', 'Added file2'))
+        .then(() => gitCommit('file2.txt', 'file2-modified', 'Modified file2'))
+        .then(() => git('branch', 'feature2')) // This does not switch to the branch
+        .then(() => gitCommit('file3.txt', 'file3-added-feature1', 'Added file3'))
+        .then(() => git('checkout', 'feature2'))
+        .then(() => gitCommit('file3.txt', 'file3-added-feature2', 'Added file3'))
+        .then(() => thoughtful.cleanupHistory({targetBranch: 'master', thoughtful: require.resolve('../bin/thoughtful.js')}))
+        // Test conditions
+        .then(() => expect(git('log', '--pretty===%s%n%b').then((output) => output.stdout.trim().replace(/\n+/g, '  ')))
+            .to.eventually.equal('==Rebased commit  Added file2  Modified file2  Added file3  ==Added file1.txt  ==Added package.json'))
+    })
+
+    it('should also work when on rebase is necessary in the end', () => {
+      // Git editor command that does not modify the commit message and works on all platforms
+      process.env['GIT_EDITOR'] = `${require.resolve('./dummy-git/commit-editor.js')} "Rebased commit"`
+      thoughtful.reset()
+      // Test setup: two feature branches forked from master~1
+      return git('branch', 'feature1')
+        .then(() => git('checkout', 'feature1'))
+        .then(() => gitCommit('file2.txt', 'file2-added', 'Added file2'))
+        .then(() => gitCommit('file2.txt', 'file2-modified', 'Modified file2'))
+        .then(() => gitCommit('file3.txt', 'file3-added-feature1', 'Added file3'))
+        .then(() => thoughtful.cleanupHistory({targetBranch: 'master', thoughtful: require.resolve('../bin/thoughtful.js')}))
+        // Test conditions
+        .then(() => expect(git('log', '--pretty===%s%n%b').then((output) => output.stdout.trim().replace(/\n+/g, '  ')))
+            .to.eventually.equal('==Rebased commit  Added file2  Modified file2  Added file3  ==Added package.json'))
     })
   })
 })
