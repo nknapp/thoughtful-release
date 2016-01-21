@@ -6,6 +6,7 @@
     "type": "git",
     "url": "https://github.com/nknapp/thoughtful-release.git"
   },
+  "homepage": "https://github.com/nknapp/thoughtful-release",
   "author": {
     "name": "Nils Knappmeier",
     "email": "npm@knappi.org",

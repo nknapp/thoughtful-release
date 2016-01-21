@@ -9,9 +9,8 @@ versions is about the same for each package. This module is a toolkit to make th
 increasing the package quality and reducing the workload for a release:
 
 * **Generate changelog**: Changelog generation is inspired by the [Ghost git workflow](https://github.com/TryGhost/Ghost/wiki/Git-workflow)
-* **QA git hooks**: (not yet implemented) Mechanism to register a pre-commit and a pre-push hook so to
-    avoid working on the master branch and to ensure the code-style of the project
-* **Git workflow**: (not yet implemented) Tools for creating a new branch and cleaning up the history before merging to master
+* **QA git hooks**: This can be done using the {{npm 'ghooks'}} package. `Thougthful` has no builtins for that.
+* **Git workflow**: Git hooks to prevent commiting to `master` directly. Support for cleaning up the history before merging to master
 * **Release workflow**: (not yet implemented) A command to run tests, generate changelog, bump versions and publish to npm,
     similar to the {{npm 'release-tools'}}-package
 

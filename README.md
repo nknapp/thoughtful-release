@@ -1,4 +1,8 @@
-# thoughtful-release
+# thoughtful-release 
+
+[![NPM version](https://badge.fury.io/js/thoughtful-release.svg)](http://badge.fury.io/js/thoughtful-release)
+[![Build Status](https://travis-ci.org/nknapp/thoughtful-release.svg)](https://travis-ci.org/nknapp/thoughtful-release)
+[![Coverage Status](https://img.shields.io/coveralls/nknapp/thoughtful-release.svg)](https://coveralls.io/r/nknapp/thoughtful-release)
 
 > Create high quality releases with less work
 
@@ -13,9 +17,8 @@ versions is about the same for each package. This module is a toolkit to make th
 increasing the package quality and reducing the workload for a release:
 
 * **Generate changelog**: Changelog generation is inspired by the [Ghost git workflow](https://github.com/TryGhost/Ghost/wiki/Git-workflow)
-* **QA git hooks**: (not yet implemented) Mechanism to register a pre-commit and a pre-push hook so to
-    avoid working on the master branch and to ensure the code-style of the project
-* **Git workflow**: (not yet implemented) Tools for creating a new branch and cleaning up the history before merging to master
+* **QA git hooks**: This can be done using the [ghooks](https://npmjs.com/package/ghooks) package. `Thougthful` has no builtins for that.
+* **Git workflow**: Git hooks to prevent commiting to `master` directly. Support for cleaning up the history before merging to master
 * **Release workflow**: (not yet implemented) A command to run tests, generate changelog, bump versions and publish to npm,
     similar to the [release-tools](https://npmjs.com/package/release-tools)-package
 
@@ -36,89 +39,24 @@ Usage: thoughtful [options] [command]
 
   Commands:
 
-    changelog [options] <release>  update the CHANGELOG.md of the module in the current directory
-    precommit                      Perform precommit-checks (locked branches...). Return non-zero exit-code if something is wrong
+    changelog [options]              update the CHANGELOG.md of the module in the current directory.
+    precommit                        Perform precommit-checks (locked branches...). Return non-zero exit-code if something is wrong
+    sequence-editor <filename>       "Editor" for the rebase todos (replacing "pick" with "squash") with no interaction
+    cleanup-history [target-branch]  Rebase the current branch onto another branch, condensing the whole branch into a single commit.
 
   Options:
 
     -h, --help     output usage information
     -V, --version  output the version number
-    -V, --version  output the version number
 ```
 
-#### Updating the changelog
+Please refer to the [man/thoughtful.md](command line reference) of this project for 
+details about the commands. 
 
-`thoughtful changelog` will generate a changelog from the git-history of the project,
-summarizing changes since the last release-tag (one line per commit). It uses 
-[this gist by @ErisDS](https://gist.github.com/ErisDS/23fcb4d2047829ec80f4)
-as inspiration. A clean git-history is a prerequisite for generating a changelog like this.
-I think the rules for the [Ghost git-workflow rules](https://github.com/TryGhost/Ghost/wiki/Git-workflow)
-are well suited for this purpose.
-In particular the following parts should be followed when using `thoughtful` to generate a changelog:
+#### Supporting the git workflow
 
-* "Always work on a branch" and never submit to `master` directly.
-* [Clean up the git history](https://github.com/TryGhost/Ghost/wiki/Git-workflow#clean-up-history) 
-  before merging to master so that on feature or bugfix finally consists of a single commit.
-* Follow a specific [format for commit messages], most importantly the commit summary on the first line
-  (the first line is what `thoughtful` uses for the changelog).
-
-Release tags are annotated tags that match of the form `v*` (like `v1.3.0` or `v1.5.0.beta-1`).
-
-If no file `CHANGELOG.md` exists in your project, the command will create one from a template. 
-Be sure not to modify the placeholder `<a name="current-release"></a>` in the file, since this 
-is the point where new releases are inserted.
-
-The section-header for the current changelog-entry will be the next version, determined by the `release`-parameter.
-The paramater can be a version bump (`major`, `minor`, `patch`,...) or a valid semver-number. Possible values
-are the same as the values for the [npm version](https://docs.npmjs.com/cli/version)-command.
-
-#### Thoughtful pre-commit hooks
-
-The command `thoughtful precommit` will execute precommit hooks. You can register this command (manually) 
-as pre-commit-hook for your repository by adding a file `.git/hooks/pre-commit` to your project with 
-the following contents
-
-```bash
-#!/bin/sh
-
-exec thoughtful precommit
-```
-
-Execute-permissions must be set for this file.
-
-The command will do the following tasks:
-
-* **Reject commits to the locked branches.** If nothing is configured in the `package.json`, then the 
-  `master`-branch is a locked branch. In the following example, `master` is not locked, but `lockedBranch1`
-  and `lockedBranch2` is locked instead.
-
-```json
-{
-  "name": "example",
-  "version": "0.0.1",
-  "thoughtful": {
-    "lockedBranches": [ "lockedBranch1", "lockedBranch2" ]
-  }
-}
-```
-
-
-* **Execute custom pre-commit hooks (not yet implemented).** In the future, `thoughtful precommit` will additionally
-  execute the `pre-commit` script defined in the `package.json`. This can be used to enforce coding-styles
-  (I use [standard](https://npmjs.com/package/standard)) and/or unit tests.
-
-##### Release new versions with pre-commit hook
-
-When the pre-commit hook is activated, you may have difficulties releasing new versions of your module, because
-`npm version` attempts to commit the version-bump to the `master`-branch. `thoughtful precommit` can be disabled
-temporarily by settings the environment variable `THOUGHTFUL_LOCKED_BRANCHES=false`. 
-In other words, you now need to call
-
-```bash
-THOUGHTFUL_LOCKED_BRANCHES=false npm version minor
-```
-
-to bump the minor version number and commit the change to the repository.
+You can enforce the above workflow using git-hooks and `Thoughtful`. Have a look at 
+[the git-workflow](docs/git-workflow.md)-document.
 
 ##  API-reference
 
@@ -130,6 +68,8 @@ to bump the minor version number and commit the change to the repository.
   * [new Thoughtful(cwd)](#new_Thoughtful_new)
   * [.updateChangelog(release)](#Thoughtful+updateChangelog) ⇒ <code>Promise.&lt;?&gt;</code>
   * [.rejectLockedBranches()](#Thoughtful+rejectLockedBranches) ⇒ <code>Promise.&lt;boolean&gt;</code>
+  * [.sequenceEditor(filename)](#Thoughtful+sequenceEditor)
+  * [.cleanupHistory(options)](#Thoughtful+cleanupHistory)
   * [.reset()](#Thoughtful+reset)
 
 <a name="new_Thoughtful_new"></a>
@@ -163,6 +103,31 @@ The branch check can be disabled by setting the environment variable
 **Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
 **Returns**: <code>Promise.&lt;boolean&gt;</code> - true, if the branch is not locked.  
 **Throw**: <code>Error</code> if the branch is locked  
+<a name="Thoughtful+sequenceEditor"></a>
+#### thoughtful.sequenceEditor(filename)
+For use with "git -c sequence.editor=..." when rebasing and squashing feature-branches
+
+Replace "pick" commits in rebase-todo-file by "squash" (except the first).
+
+**Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
+
+| Param | Description |
+| --- | --- |
+| filename | the name of the file to be edited |
+
+<a name="Thoughtful+cleanupHistory"></a>
+#### thoughtful.cleanupHistory(options)
+Perform a rebase of the current (topic-)branch onto a target-branch, condensing the
+whole branch into a single commit.
+
+**Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | options to this function |
+| [options.targetBranch] | <code>string</code> | the branch to rebase the current branch upon (default: master) |
+| [options.thoughtful] | <code>string</code> | the command to invoke "thoughtful" (default: process.argv[1]) |
+
 <a name="Thoughtful+reset"></a>
 #### thoughtful.reset()
 Reset and reload the cached parts of Thoughtful

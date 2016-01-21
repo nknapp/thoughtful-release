@@ -1,0 +1,13 @@
+{
+  "name": "my-package",
+  "version": "0.0.0",
+  "devDependencies": {
+    "ghooks": "^1.0.1",
+    "thoughtful-release": "*"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "thoughtful precommit"
+    }
+  }
+}
