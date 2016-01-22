@@ -1,6 +1,20 @@
 # Release-Notes
 
 <a name="current-release"></a>
+# Version 0.2.0 (Fri, 22 Jan 2016 23:28:03 GMT)
+
+* [5471354](https://github.com/nknapp/thoughtful-release/commit/5471354) Update jsdoc for q-child-process file - Nils Knappmeier
+* [61d952a](https://github.com/nknapp/thoughtful-release/commit/61d952a) Update documentation - Nils Knappmeier
+* [0488679](https://github.com/nknapp/thoughtful-release/commit/0488679) Added command "cleanup-history" - Nils Knappmeier
+* [40ccc22](https://github.com/nknapp/thoughtful-release/commit/40ccc22) Fix travis configuration for coverage tests - Nils Knappmeier
+* [11e16cb](https://github.com/nknapp/thoughtful-release/commit/11e16cb) [Breaking change] Locked branches are now disabled via THOUGHTFUL_LOCKED_BRANCHES=false - Nils Knappmeier
+* [bc763df](https://github.com/nknapp/thoughtful-release/commit/bc763df) Add "files"-property to package.json - Nils Knappmeier
+* [49461f8](https://github.com/nknapp/thoughtful-release/commit/49461f8) Remove sinon.js from devDependencies - Nils Knappmeier
+* [74f0e87](https://github.com/nknapp/thoughtful-release/commit/74f0e87) Replace lodash-dependency by per method builds - Nils Knappmeier
+* [fb33874](https://github.com/nknapp/thoughtful-release/commit/fb33874) Use 'Date.prototype.toUTCString()' to format dates for changelogs - Nils Knappmeier
+* [63cda43](https://github.com/nknapp/thoughtful-release/commit/63cda43) Dev: Run git pre-commit hook with "ghooks" - Nils Knappmeier
+
+
 # Version 0.1.0 (2016-01-04)
 
 * [c19a23e](https://github.com/nknapp/thoughtful-release/commit/c19a23e) Added command 'precommit' to execute check for locked branches (breaking change) - Nils Knappmeier
