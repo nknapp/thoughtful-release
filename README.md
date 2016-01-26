@@ -50,7 +50,7 @@ Usage: thoughtful [options] [command]
     -V, --version  output the version number
 ```
 
-Please refer to the [man/thoughtful.md](command line reference) of this project for 
+Please refer to the [command line reference](man/thoughtful.md) of this project for 
 details about the commands. 
 
 #### Supporting the git workflow
