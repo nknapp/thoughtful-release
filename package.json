@@ -64,7 +64,7 @@
   },
   "config": {
     "ghooks": {
-      "pre-commit": "thoughtful precommit && standard --format"
+      "pre-commit": "thoughtful precommit && standard --format && thought run -a"
     }
   },
   "keywords": []
