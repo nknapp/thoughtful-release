@@ -1,6 +1,15 @@
 # Release-Notes
 
 <a name="current-release"></a>
+# Version 0.2.1 (Tue, 26 Jan 2016 19:51:15 GMT)
+
+* [3571898](https://github.com/nknapp/thoughtful-release/commit/3571898) Remove io.js builds in travis - Nils Knappmeier
+* [e25d21f](https://github.com/nknapp/thoughtful-release/commit/e25d21f) Support for git 1.8 (no "rebase --forkpoint") - Nils Knappmeier
+* [2541d57](https://github.com/nknapp/thoughtful-release/commit/2541d57) Add "thought run -a" as pre-commit hook - Nils Knappmeier
+* [da92856](https://github.com/nknapp/thoughtful-release/commit/da92856) Correct link to cli reference - Nils Knappmeier
+
+
+
 # Version 0.2.0 (Fri, 22 Jan 2016 23:28:03 GMT)
 
 * [5471354](https://github.com/nknapp/thoughtful-release/commit/5471354) Update jsdoc for q-child-process file - Nils Knappmeier
