@@ -85,7 +85,8 @@ describe('main-module:', () => {
       .then(() => qfs.makeTree(workDir()))
       // Create git repo
       .then(() => qcp.execFile('git', ['init'], {cwd: workDir()}))
-
+      .then(() => git('config', 'user.email', 'test@example.com'))
+      .then(() => git('config', 'user.name', 'Test User'))
       // add and commit package.json
       .then(() => {
         return qfs.write(workDir('package.json'), JSON.stringify({
