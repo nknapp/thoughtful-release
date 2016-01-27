@@ -6,9 +6,9 @@
 
 > Create high quality releases with less work
 
-People like **substack** encourage you to divide 
+People like **substack** [encourage you to divide 
 the functionality of large monolithic modules into reasonable parts and publish each of those as module on 
-there own. That's what I did when I separated [swagger-to-html](https://npmjs.com/package/swagger-to-html) into [bootprint](https://npmjs.com/package/bootprint) and three
+there own](https://www.youtube.com/watch?v=DCQNm6yiZh0). That's what I did when I separated [swagger-to-html](https://npmjs.com/package/swagger-to-html) into [bootprint](https://npmjs.com/package/bootprint) and three
 template modules and then extracted multiple modules (i.e. the `customize-`family) from `bootprint`, so that
 it was easy to implement [thought](https://npmjs.com/package/thought) on this basis as well. 
 
