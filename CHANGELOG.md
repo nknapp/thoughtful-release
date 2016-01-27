@@ -1,6 +1,10 @@
 # Release-Notes
 
 <a name="current-release"></a>
+# Version 0.2.2 (Wed, 27 Jan 2016 19:08:36 GMT)
+
+* [339c898](https://github.com/nknapp/thoughtful-release/commit/339c898) Link from README to substack's presentation - Nils Knappmeier
+
 # Version 0.2.1 (Tue, 26 Jan 2016 19:51:15 GMT)
 
 * [3571898](https://github.com/nknapp/thoughtful-release/commit/3571898) Remove io.js builds in travis - Nils Knappmeier
