@@ -44,8 +44,8 @@ One line of changelog is generated for each commit.
 * The command will create an initial file CHANGELOG.md, if none exists yet.
 * The changelog-file needs placeholder `<a name="current-release"></a>` at the place where the new release should be inserted.
 
-See [the git-workflow](https://github.com/nknapp/thoughtful-release/blob/v0.2.1/docs/git-workflow.md) for details about the proposed workflow. 
-An example for the generated changelog can be seen in [the changelog-file of this module](https://github.com/nknapp/thoughtful-release/blob/v0.2.1/CHANGELOG.md)
+See [the git-workflow](https://github.com/nknapp/thoughtful-release/blob/v0.2.2/docs/git-workflow.md) for details about the proposed workflow. 
+An example for the generated changelog can be seen in [the changelog-file of this module](https://github.com/nknapp/thoughtful-release/blob/v0.2.2/CHANGELOG.md)
 
 * `&lt;release>`: This required parameter is the version number that should be inserted for the updated part of the changelog.
      It must either be a valid semver-identifier or one of `major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`.
@@ -56,7 +56,7 @@ This command uses [this gist by @ErisDS](https://gist.github.com/ErisDS/23fcb4d2
 ### `thoughtful precommit`
 
 This command executes checks that are meant to be used as git pre-commit hooks. Currently, it only checks for locked-branches 
-and returns with a non-zero exit-code if the current branch is marked as locked. See [the locked-branches documentation](https://github.com/nknapp/thoughtful-release/blob/v0.2.1/docs/locked-branches.md)
+and returns with a non-zero exit-code if the current branch is marked as locked. See [the locked-branches documentation](https://github.com/nknapp/thoughtful-release/blob/v0.2.2/docs/locked-branches.md)
 for details about how to configure locked-branches. If no configuration can be found, the default is to only prevent commits to the
 master branch.
 
