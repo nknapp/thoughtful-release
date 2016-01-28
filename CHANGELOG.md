@@ -1,6 +1,15 @@
 # Release-Notes
 
 <a name="current-release"></a>
+# Version 0.2.3 (Thu, 28 Jan 2016 23:51:08 GMT)
+
+* [2eafc06](https://github.com/nknapp/thoughtful-release/commit/2eafc06) Minor documenation typos fixed - Nils Knappmeier
+* [700b2bc](https://github.com/nknapp/thoughtful-release/commit/700b2bc) Add tests and istanbul hints to extend test coverage - Nils Knappmeier
+* [5c205fb](https://github.com/nknapp/thoughtful-release/commit/5c205fb) Show commit editor when cleaning single-commit branches - Nils Knappmeier
+* [ce025fc](https://github.com/nknapp/thoughtful-release/commit/ce025fc) This time real: Link from README to substack's presentation - Nils Knappmeier
+
+
+
 # Version 0.2.2 (Wed, 27 Jan 2016 19:08:36 GMT)
 
 * [339c898](https://github.com/nknapp/thoughtful-release/commit/339c898) Link from README to substack's presentation - Nils Knappmeier
