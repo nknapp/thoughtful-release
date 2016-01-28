@@ -21,6 +21,7 @@ var expect = chai.expect
 var qcp = require('../lib/q-child-process')
 var qfs = require('q-io/fs')
 var path = require('path')
+var Q = require('q')
 var _ = {
   escapeRegExp: require('lodash.escaperegexp'),
   toArray: require('lodash.toarray')
@@ -198,6 +199,23 @@ describe('main-module:', () => {
         // Test conditions
         .then(() => expect(git('log', '--pretty===%s%n%b').then((output) => output.stdout.trim().replace(/\n+/g, '  ')))
             .to.eventually.equal('==Rebased commit  Added file2  ==Added file1.txt  ==Added package.json'))
+    })
+  })
+
+  describe('the sequenceEditor-method', () => {
+    it('should replace all "pick" with "squash" in the file, except the first one', () => {
+      var actual = qfs.copy('test/fixtures/git-rebase-todo.txt', workDir('git-rebase-todo'))
+        .then(() => thoughtful.sequenceEditor(workDir('git-rebase-todo')))
+        .then(() => qfs.read(workDir('git-rebase-todo')))
+      var expected = qfs.read('test/fixtures/git-rebase-todo-target.txt')
+      return Q.all([actual, expected])
+        .spread((actual, expected) => expect(actual).to.equal(expected))
+    })
+
+    it('should reject files other than "git-rebase-todo"', () => {
+      var promise = qfs.copy('test/fixtures/git-rebase-todo.txt', workDir('git-rebase-todo.txt'))
+        .then(() => thoughtful.sequenceEditor(workDir('git-rebase-todo.txt')))
+      return expect(promise).to.be.rejected
     })
   })
 })

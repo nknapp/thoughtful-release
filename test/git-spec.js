@@ -51,8 +51,37 @@ describe('git-library:', () => {
         newCommits: 0
       })
     })
+
+    it("should relay git's stderr as error thrown", () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-error.js')
+      return expect(git('test').lastRelease()).to.be.rejected
+    })
+
+    it("should relay git's stderr as error thrown, even if the exit code is 0", () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-error-exit0.js')
+      return expect(git('test').lastRelease()).to.be.rejected
+    })
+
+    it('should throw an error the found tag does not match the schema (this can actually never happen)', () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-non-matching-tag.js')
+      return expect(git('test').lastRelease()).to.be.rejected
+    })
+
+    it('should return a special object if no version tags exist', () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-no-version-tag.js')
+      return expect(git('test').lastRelease()).to.eventually.deep.equal({
+        tag: null,
+        newCommits: null
+      })
+    })
+
+    it('should throw an error if the git process throws an error', () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-error.js')
+      return expect(git('test').lastRelease()).to.be.rejected
+    })
   })
-  describe('the "changelog"-method', () => {
+
+  describe('the "changes"-method', () => {
     it('should call "git log" with the correct parameters and return the plain output', () => {
       process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-v0.8.3.js')
       return expect(git('test').changes('v0.8.3'))
@@ -71,6 +100,29 @@ describe('git-library:', () => {
       return expect(git('test').changes('v0.8.3', {
         to: 'v0.8.5'
       })).to.eventually.equal('log|--no-merges|--pretty=tformat:* %h %s - %an|v0.8.3..v0.8.5\n')
+    })
+
+    it('should treat output of git on stderr as error', () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-error-exit0.js')
+      return expect(git('test').changes('v0.8.3', {
+        to: 'v0.8.5'
+      })).to.be.rejected
+    })
+
+    it('should not add markdown links to non-github repos', () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-v0.8.3.js')
+      return expect(git('test').changes('v0.8.3', {
+        url: 'http://blog.knappi.org'
+      }))
+        .to.eventually.equal('log|--no-merges|--pretty=tformat:* %h %s - %an|v0.8.3..\n')
+    })
+
+    it('should add markdown links to github repos', () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-v0.8.3.js')
+      return expect(git('test').changes('v0.8.3', {
+        url: 'https://github.com/nknapp/bootprint'
+      }))
+        .to.eventually.equal('log|--no-merges|--pretty=tformat:* [%h](https://github.com/nknapp/bootprint/commit/%h) %s - %an|v0.8.3..\n')
     })
   })
 

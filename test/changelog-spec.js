@@ -46,6 +46,17 @@ describe('changelog-library:', () => {
     })
   })
 
+  describe('the contents-method', () => {
+    it('should throw an error, if the CHANGELOG.md cannot be read, but does exist', () => {
+      var workdir = path.join('tmp', 'test', 'changelog-error')
+
+      // Create CHANGELOG.md as directory, so that it can't be read.
+      var promise = qfs.makeTree(path.join(workdir, 'CHANGELOG.md'))
+        .then(() => changelog(workdir).contents())
+      return expect(promise).to.be.rejected
+    })
+  })
+
   describe('the save method', () => {
     /**
      * Return the path to a file within the working dir

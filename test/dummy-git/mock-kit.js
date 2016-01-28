@@ -19,7 +19,13 @@ module.exports = function (choices) {
   var choiceKey = process.argv.slice(2).join('|')
   var selectedChoice = choices[choiceKey]
   if (selectedChoice) {
-    console.log(selectedChoice.stdout)
+    if (selectedChoice.stdout) {
+      console.log(selectedChoice.stdout)
+    }
+    if (selectedChoice.stderr) {
+      console.error(selectedChoice.stderr)
+    }
+    process.exit(selectedChoice.exitCode || 0)
   } else {
     console.error(`No choice found for "${choiceKey}" in ${process.argv[1]}`)
   }
