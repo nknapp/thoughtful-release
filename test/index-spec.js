@@ -169,7 +169,7 @@ describe('main-module:', () => {
             .to.eventually.equal('==Rebased commit  Added file2  Modified file2  Added file3  ==Added file1.txt  ==Added package.json'))
     })
 
-    it('should also work when on rebase is necessary in the end', () => {
+    it('should also work when no rebase is necessary in the end', () => {
       // Git editor command that does not modify the commit message and works on all platforms
       process.env['GIT_EDITOR'] = `${require.resolve('./dummy-git/commit-editor.js')} "Rebased commit"`
       thoughtful.reset()
@@ -183,6 +183,21 @@ describe('main-module:', () => {
         // Test conditions
         .then(() => expect(git('log', '--pretty===%s%n%b').then((output) => output.stdout.trim().replace(/\n+/g, '  ')))
             .to.eventually.equal('==Rebased commit  Added file2  Modified file2  Added file3  ==Added package.json'))
+    })
+
+    it('should rebase a branch, that consists of a single commit, onto the master and offer to change the commit message', () => {
+      // Git editor command that does not modify the commit message and works on all platforms
+      process.env['GIT_EDITOR'] = `${require.resolve('./dummy-git/commit-editor.js')} "Rebased commit"`
+      thoughtful.reset()
+      // Test setup: two feature branches forked from master~1
+      return git('branch', 'feature1')
+        .then(() => gitCommit('file1.txt', 'abc', 'Added file1.txt'))
+        .then(() => git('checkout', 'feature1'))
+        .then(() => gitCommit('file2.txt', 'file2-added', 'Added file2'))
+        .then(() => thoughtful.cleanupHistory({targetBranch: 'master', thoughtful: require.resolve('../bin/thoughtful.js')}))
+        // Test conditions
+        .then(() => expect(git('log', '--pretty===%s%n%b').then((output) => output.stdout.trim().replace(/\n+/g, '  ')))
+            .to.eventually.equal('==Rebased commit  Added file2  ==Added file1.txt  ==Added package.json'))
     })
   })
 })

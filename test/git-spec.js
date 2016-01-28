@@ -91,6 +91,16 @@ describe('git-library:', () => {
       return Q.all([actual, expected])
         .spread((actual, expected) => expect(actual).to.equal(expected))
     })
+
+    it('should replace a single "pick" with "reword" in the file', () => {
+      var actual = qfs.makeTree('tmp/git-squash-rebase-todo')
+        .then(() => qfs.copy('test/fixtures/git-rebase-todo-single.txt', 'tmp/git-squash-rebase-todo/git-rebase-todo-single.txt'))
+        .then(() => git('test').squashRebaseTodos('tmp/git-squash-rebase-todo/git-rebase-todo-single.txt'))
+        .then(() => qfs.read('tmp/git-squash-rebase-todo/git-rebase-todo-single.txt'))
+      var expected = qfs.read('test/fixtures/git-rebase-todo-single-target.txt')
+      return Q.all([actual, expected])
+        .spread((actual, expected) => expect(actual).to.equal(expected))
+    })
   })
 
   describe('the cleanupHistory-method', () => {
