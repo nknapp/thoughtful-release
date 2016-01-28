@@ -10,7 +10,7 @@ A tool to support maintenance tasks in small npm-modules.
 DESCRIPTION
 -----------
 
-`thoughtful` is automates certain tasks that recur during the development of applications:
+`thoughtful` automates certain tasks that recur during the development of applications:
 
 * Changelog generation
 * Git-Workflow to keep the history clean
@@ -18,7 +18,7 @@ DESCRIPTION
 COMMANDS
 --------
 
-### `thoughtful changelog &lt;release>`
+### `thoughtful changelog <release>`
 
 Update the file CHANGELOG.md in the current directory. The contents of the changelog is derived from the git-history of the project.
 One line of changelog is generated for each commit.
@@ -32,7 +32,7 @@ One line of changelog is generated for each commit.
 See [the git-workflow]({{github 'docs/git-workflow.md'}}) for details about the proposed workflow. 
 An example for the generated changelog can be seen in [the changelog-file of this module]({{github 'CHANGELOG.md'}})
 
-* `&lt;release>`: This required parameter is the version number that should be inserted for the updated part of the changelog.
+* `<release>`: This required parameter is the version number that should be inserted for the updated part of the changelog.
      It must either be a valid semver-identifier or one of `major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`.
      The semantics are the same as in the `npm version` command (see https://docs.npmjs.com/cli/version)
 
@@ -52,7 +52,7 @@ when squashing a whole branch into a single commit. While an interactive rebase 
 commits to pick, squash, edit..., this "editor" just selects "pick" on the first commit and "squash" on the rest. It return with a
 non-zero exit-code if called on any file other than "git-rebase-todo"
 
-###  `thoughtful clean-history [target-branch]
+###  `thoughtful clean-history [target-branch]`
 
 This command performs a history clean-up that should be done prior to merging a feature branch into the master.
 
