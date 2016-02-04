@@ -17,6 +17,7 @@ program
   .version(require('../package').version)
   .command('changelog')
   .option('-r, --release <release>', 'the version of the next release or `major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`')
+  .option('-a, --add-to-git', 'the version of the next release or `major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`')
   .description('update the CHANGELOG.md of the module in the current directory.')
   .action((options) => {
     console.log(options)

@@ -130,6 +130,33 @@ describe('main-module:', () => {
 
       return expect(changelogContents).to.eventually.match(regexFixture('index-spec/CHANGELOG-second.md'))
     })
+
+    it('should add the CHANGELOG.md file if addToGit is true', () => {
+      var stagedFiles = thoughtful.updateChangelog({ addToGit: true })
+        .then(() => qfs.read(workDir('CHANGELOG.md')))
+        // get staged files
+        .then(() => git('diff', '--name-only', '--staged'))
+        .then((output) => output.stdout.trim())
+      return expect(stagedFiles).to.eventually.equal('CHANGELOG.md')
+    })
+
+    it('should not add the CHANGELOG.md file if addToGit is undefined', () => {
+      var stagedFiles = thoughtful.updateChangelog()
+        .then(() => qfs.read(workDir('CHANGELOG.md')))
+        // get staged files
+        .then(() => git('diff', '--name-only', '--staged'))
+        .then((output) => output.stdout)
+      return expect(stagedFiles).to.eventually.equal('')
+    })
+
+    it('should not add the CHANGELOG.md file if addToGit is false', () => {
+      var stagedFiles = thoughtful.updateChangelog()
+        .then(() => qfs.read(workDir('CHANGELOG.md')))
+        // get staged files
+        .then(() => git('diff', '--name-only', '--staged'))
+        .then((output) => output.stdout)
+      return expect(stagedFiles).to.eventually.equal('')
+    })
   })
 
   describe('the rejectLockedBranches-method', () => {

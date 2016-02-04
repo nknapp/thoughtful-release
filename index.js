@@ -57,6 +57,11 @@ function Thoughtful (cwd) {
         return git.changes(releaseInfo.tag, {url: repoUrl})
           // Store changelog
           .then((changes) => changelog.newRelease(version, new Date(), changes).save())
+          .then(() => {
+            if (options.addToGit) {
+              return git.add(changelog.file)
+            }
+          })
           .then(() => `Updated CHANGELOG.md for version ${version}`)
       })
   }
