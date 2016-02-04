@@ -11,7 +11,8 @@
 
 var Q = require('q')
 var _ = {
-  contains: require('lodash.contains')
+  contains: require('lodash.contains'),
+  isPlainObject: require('lodash.isplainobject')
 }
 var path = require('path')
 
@@ -30,13 +31,21 @@ function Thoughtful (cwd) {
   /**
    * Update the CHANGELOG.md of the module in the given working directory.
    *
-   * @param {string} release the release specification (as in `npm version`)
+   * @param {object=} options optional parameters
+   * @param {string=} options.release the release specification (as in `npm version`). If no value is provided, the current
+   *    version from the package.json will be used. This is useful, when the function is called by as npm-`version` script
+   *    in which case it is called after version bump but before committing the change.
+   * @param {boolean=} options.openEditor if this value is true, the changelog-file will be opened in an editor before commiting to git.
+   *    The environment variable THOUGHTFUL_CHANGELOG_EDITOR may contain a custom command to open the editor. If this variable is not
+   *    set, the EDITOR variable or `vi` will be used.
+   * @param {boolean=} options.addToGit if this value is true, the changelog-file will be staged in the git repository
    * @returns {Promise<?>} a promise for finishing writing the changelog
    */
-  this.updateChangelog = function updateChangelog (release) {
+  this.updateChangelog = function updateChangelog (options) {
+    options = options || {}
     this.reset()
     // Determine next version
-    const versionP = npm.incVersion(release)
+    const versionP = npm.computeVersion(options.release)
     // Determine current version tag
     const releaseInfoP = git.lastRelease()
     // Determine repository url
@@ -48,6 +57,16 @@ function Thoughtful (cwd) {
         return git.changes(releaseInfo.tag, {url: repoUrl})
           // Store changelog
           .then((changes) => changelog.newRelease(version, new Date(), changes).save())
+          .then(() => {
+            if (options.openEditor) {
+              return changelog.openEditor()
+            }
+          })
+          .then(() => {
+            if (options.addToGit) {
+              return git.add(changelog.file)
+            }
+          })
           .then(() => `Updated CHANGELOG.md for version ${version}`)
       })
   }

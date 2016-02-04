@@ -16,11 +16,17 @@ const thoughtful = new Thoughtful(process.cwd())
 program
   .version(require('../package').version)
   .command('changelog')
-  .option('<release>', 'the version of the next release or `major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`')
-  .description('update the CHANGELOG.md of the module in the current directory.')
-  .action((release) => {
+  .option('-r, --release <release>', 'the version of the next release or `major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`')
+  .option('-a, --add-to-git', 'the version of the next release or `major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`')
+  .option('-o, --open-editor', 'open the file CHANGELOG.md in an editor after the update, but before staging in the git-repository.')
+  .description('Update the file CHANGELOG.md of the module in the current directory.')
+  .action((options) => {
     console.log('Updating changelog')
-    thoughtful.updateChangelog(release).done(console.log)
+    thoughtful.updateChangelog({
+      release: options.release,
+      addToGit: options.addToGit,
+      openEditor: options.openEditor
+    }).done(console.log)
   })
 
 program

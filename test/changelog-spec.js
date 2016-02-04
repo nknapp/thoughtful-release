@@ -10,6 +10,7 @@
 // /* global xdescribe */
 // /* global xit */
 /* global beforeEach */
+/* global afterEach */
 
 'use strict'
 
@@ -96,6 +97,55 @@ describe('changelog-library:', () => {
             .save())
         .then(() => qfs.read(workDir('CHANGELOG.md')))
       return expect(changelogContents).to.eventually.equal(fixture('changelog-with-two-releases.md'))
+    })
+  })
+
+  describe('The openEditor-method', function () {
+    /**
+     * Return the path to a file within the working dir
+     *
+     */
+    function workDir () {
+      const argsAsArray = Array.prototype.slice.apply(arguments)
+      return path.join.apply(path, ['tmp', 'test', 'changelog-editor'].concat(argsAsArray))
+    }
+
+    // Clear the working directory before each test
+    beforeEach(() => {
+      return qfs.removeTree(workDir())
+        .catch(ignoreENOENT)
+        .then(() => qfs.makeTree(workDir()))
+    })
+
+    afterEach(() => {
+      process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = ''
+      process.env['EDITOR'] = ''
+    })
+
+    it('should call THOUGHTFUL_CHANGELOG_EDITOR as editor, if set', () => {
+      const dummyEditor = path.resolve(__dirname, 'dummy-editor', 'dummy-editor.js')
+      process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = `${dummyEditor} changelog-editor`
+      process.env['EDITOR'] = `${dummyEditor} default-editor`
+      var changelogContents = changelog(workDir()).openEditor()
+        .then(() => qfs.read(workDir('CHANGELOG.md')))
+      return expect(changelogContents).to.eventually.equal(`changelog-editor
+
+# Release-Notes
+<a name="current-release"></a>
+`)
+    })
+
+    it('should call EDITOR as editor, if THOUGHTFUL_CHANGELOG_EDITOR is not set', () => {
+      const dummyEditor = path.resolve(__dirname, 'dummy-editor', 'dummy-editor.js')
+      process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = ''
+      process.env['EDITOR'] = `${dummyEditor} default-editor`
+      var changelogContents = changelog(workDir()).openEditor()
+        .then(() => qfs.read(workDir('CHANGELOG.md')))
+      return expect(changelogContents).to.eventually.equal(`default-editor
+
+# Release-Notes
+<a name="current-release"></a>
+`)
     })
   })
 })

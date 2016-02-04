@@ -168,4 +168,24 @@ describe('git-library:', () => {
         .to.eventually.equal('Tagging thoughtful-backup\nRebase on stable')
     })
   })
+
+  describe('ths add-method', () => {
+    it('should add a single file in case of a string', () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-add.js')
+      return expect(git('test').add('test/file1.js'))
+        .not.to.be.rejected
+    })
+
+    it('should add multiple files in case of a array', () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-add.js')
+      return expect(git('test').add(['test/file2.js', 'test/file3.js']))
+        .not.to.be.rejected
+    })
+
+    it('should return a rejected promise for non-existing files', () => {
+      process.env['THOUGHTFUL_GIT_CMD'] = path.resolve(__dirname, 'dummy-git', 'git-add.js')
+      return expect(git('test').add('test/file4.js'))
+        .to.be.rejected
+    })
+  })
 })

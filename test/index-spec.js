@@ -35,15 +35,11 @@ function fixture (filename) {
   return require('fs').readFileSync(path.join('test', 'fixtures', filename), {encoding: 'utf-8'})
 }
 
-/**
- * Load a fixture from a file. Create a regex with the contents using regex-escapings.
- * Replace all occurrences of '#_#_#_#_#' (exactly this string) by `.*` after the escaping has taken place.
-
- */
-function regexFixture (filename) {
-  var contents = fixture(filename)
-  var escaped = _.escapeRegExp(contents).replace(/#_#_#_#_#/g, '.*?')
-  return new RegExp('^' + escaped + '$')
+// Remove commit-ish and timestamp from changelog contents to make it comparable to test fixtures
+function normalize (changelogContents) {
+  return changelogContents
+    .replace(/\w\w\w, \d\d \w\w\w \d\d\d\d \d\d:\d\d:\d\d GMT/g, 'TIMESTAMP')
+    .replace(/[0-9a-f]{7}/g, 'COMMIT_ISH')
 }
 
 // Exception handler that ignores ENOENT and re-throws everything else
@@ -104,25 +100,71 @@ describe('main-module:', () => {
   })
 
   describe('the updateChangelog-method', () => {
+    afterEach(() => {
+      process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = ''
+      process.env['EDITOR'] = ''
+    })
     it('should create an initial CHANGELOG.md file for a first release', () => {
-      var changelogContents = thoughtful.updateChangelog('minor')
+      var changelogContents = thoughtful.updateChangelog({release: 'minor'})
         .then(() => qfs.read(workDir('CHANGELOG.md')))
-      return expect(changelogContents).to.eventually.match(regexFixture('index-spec/CHANGELOG-first.md'))
+      return expect(changelogContents.then(normalize)).to.eventually.equal(fixture('index-spec/CHANGELOG-first.md'))
+    })
+
+    it('should create an initial CHANGELOG.md file for a current release', () => {
+      var changelogContents = thoughtful.updateChangelog()
+        .then(() => qfs.read(workDir('CHANGELOG.md')))
+      return expect(changelogContents.then(normalize)).to.eventually.equal(fixture('index-spec/CHANGELOG-current.md'))
     })
 
     it('should update CHANGELOG.md file for a second release', () => {
       // Update changelog and bump version
-      var changelogContents = thoughtful.updateChangelog('minor')
+      var changelogContents = thoughtful.updateChangelog({release: 'minor'})
         .then(() => qcp.execFile('npm', ['version', 'minor'], {cwd: workDir()}))
         // Add another file
         .then(() => qfs.write(workDir('index.js'), "'use strict'"))
         .then(() => qcp.execFile('git', ['add', 'index.js'], {cwd: workDir()}))
         .then(() => qcp.execFile('git', ['commit', '-m', 'Added index.js'], {cwd: workDir()}))
         // Update changelog again and load contents
-        .then(() => thoughtful.updateChangelog('patch'))
+        .then(() => thoughtful.updateChangelog({release: 'patch'}))
         .then(() => qfs.read(workDir('CHANGELOG.md')))
 
-      return expect(changelogContents).to.eventually.match(regexFixture('index-spec/CHANGELOG-second.md'))
+      return expect(changelogContents.then(normalize))
+        .to.eventually.equal(fixture('index-spec/CHANGELOG-second.md'))
+    })
+
+    it('should add the CHANGELOG.md file if addToGit is true', () => {
+      var stagedFiles = thoughtful.updateChangelog({ addToGit: true })
+        .then(() => qfs.read(workDir('CHANGELOG.md')))
+        // get staged files
+        .then(() => git('diff', '--name-only', '--staged'))
+        .then((output) => output.stdout.trim())
+      return expect(stagedFiles).to.eventually.equal('CHANGELOG.md')
+    })
+
+    it('should not add the CHANGELOG.md file if addToGit is undefined', () => {
+      var stagedFiles = thoughtful.updateChangelog()
+        .then(() => qfs.read(workDir('CHANGELOG.md')))
+        // get staged files
+        .then(() => git('diff', '--name-only', '--staged'))
+        .then((output) => output.stdout)
+      return expect(stagedFiles).to.eventually.equal('')
+    })
+
+    it('should not add the CHANGELOG.md file if addToGit is false', () => {
+      var stagedFiles = thoughtful.updateChangelog({addToGit: false})
+        .then(() => qfs.read(workDir('CHANGELOG.md')))
+        // get staged files
+        .then(() => git('diff', '--name-only', '--staged'))
+        .then((output) => output.stdout)
+      return expect(stagedFiles).to.eventually.equal('')
+    })
+
+    it('should open an editor for the CHANGELOG.md file if openEditor is true', () => {
+      const dummyEditor = path.resolve(__dirname, 'dummy-editor', 'dummy-editor.js')
+      process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = `${dummyEditor} changelog-editor`
+      var contents = thoughtful.updateChangelog({ openEditor: true })
+        .then(() => qfs.read(workDir('CHANGELOG.md')))
+      return expect(contents.then(normalize)).to.eventually.equal(fixture('index-spec/CHANGELOG-current-edited.md'))
     })
   })
 

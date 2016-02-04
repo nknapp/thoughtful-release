@@ -21,20 +21,23 @@ var npm = require('../lib/npm.js')
 describe('The npm-helper lib:', () => {
   describe('The version method', () => {
     const npmModule = npm('test/fixtures/npm-spec/default')
+    it('should return the current version if the parameter is undefined', () => {
+      return expect(npmModule.computeVersion()).to.eventually.equal('0.0.1')
+    })
     it('should return the specified version if the parameter is a valid version string', () => {
-      return expect(npmModule.incVersion('1.5.2')).to.eventually.equal('1.5.2')
+      return expect(npmModule.computeVersion('1.5.2')).to.eventually.equal('1.5.2')
     })
     it('should return the incremented version if the parameter is "major"', () => {
-      return expect(npmModule.incVersion('major')).to.eventually.equal('1.0.0')
+      return expect(npmModule.computeVersion('major')).to.eventually.equal('1.0.0')
     })
     it('should return the incremented version if the parameter is "minor"', () => {
-      return expect(npmModule.incVersion('minor')).to.eventually.equal('0.1.0')
+      return expect(npmModule.computeVersion('minor')).to.eventually.equal('0.1.0')
     })
     it('should return the incremented version if the parameter is "patch"', () => {
-      return expect(npmModule.incVersion('patch')).to.eventually.equal('0.0.2')
+      return expect(npmModule.computeVersion('patch')).to.eventually.equal('0.0.2')
     })
     it('should fail if the parameter is invalid (e.g. "bugfix)"', () => {
-      return expect(npmModule.incVersion('bugfix')).to.be.rejectedWith(Error)
+      return expect(npmModule.computeVersion('bugfix')).to.be.rejectedWith(Error)
     })
   })
 

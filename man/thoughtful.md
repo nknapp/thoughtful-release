@@ -9,7 +9,7 @@ Usage: thoughtful [options] [command]
 
   Commands:
 
-    changelog [options]              update the CHANGELOG.md of the module in the current directory.
+    changelog [options]              Update the file CHANGELOG.md of the module in the current directory.
     precommit                        Perform precommit-checks (locked branches...). Return non-zero exit-code if something is wrong
     sequence-editor <filename>       "Editor" for the rebase todos (replacing "pick" with "squash") with no interaction
     cleanup-history [target-branch]  Rebase the current branch onto another branch, condensing the whole branch into a single commit.
@@ -33,7 +33,7 @@ DESCRIPTION
 COMMANDS
 --------
 
-### `thoughtful changelog <release>`
+### `thoughtful changelog [options]`
 
 Update the file CHANGELOG.md in the current directory. The contents of the changelog is derived from the git-history of the project.
 One line of changelog is generated for each commit.
@@ -47,9 +47,31 @@ One line of changelog is generated for each commit.
 See [the git-workflow](https://github.com/nknapp/thoughtful-release/blob/v0.2.3/docs/git-workflow.md) for details about the proposed workflow. 
 An example for the generated changelog can be seen in [the changelog-file of this module](https://github.com/nknapp/thoughtful-release/blob/v0.2.3/CHANGELOG.md)
 
-* `<release>`: This required parameter is the version number that should be inserted for the updated part of the changelog.
+* `-r <release>`, `--release <release>`: This optional parameter is the version number that should be inserted for the updated part of the changelog.
      It must either be a valid semver-identifier or one of `major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`.
-     The semantics are the same as in the `npm version` command (see https://docs.npmjs.com/cli/version)
+     The semantics are the same as in the `npm version` command (see https://docs.npmjs.com/cli/version). If the parameter is omitted, 
+     the current version of the `package.json` will be inserted. This is useful for running the command as `version`-script with along `npm version`
+* `-a`, `--add-to-git`: Stages the generated changelog to the git-repository. As `version`-script, this will modify the changelog in the 
+    same commit as the version bump.
+* `-o`, `--open-editor`: Opens the modified changelog in an editor before staging it to the git repository. This allows the user to make corrections
+    prior to committing.
+    
+This command is usable as `version script`:
+    
+```json
+{
+  "name": "my-package",
+  "version": "0.0.0",
+  "devDependencies": {
+    "thoughtful-release": "*"
+  },
+  "scripts": {
+    "version": "thoughtful changelog -o -a"
+  }
+}
+
+```
+
 
 This command uses [this gist by @ErisDS](https://gist.github.com/ErisDS/23fcb4d2047829ec80f4) as inspiration.
 

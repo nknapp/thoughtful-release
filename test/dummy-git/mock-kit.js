@@ -28,5 +28,6 @@ module.exports = function (choices) {
     process.exit(selectedChoice.exitCode || 0)
   } else {
     console.error(`No choice found for "${choiceKey}" in ${process.argv[1]}`)
+    process.exit(255)
   }
 }
