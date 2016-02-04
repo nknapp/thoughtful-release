@@ -21,6 +21,9 @@ var npm = require('../lib/npm.js')
 describe('The npm-helper lib:', () => {
   describe('The version method', () => {
     const npmModule = npm('test/fixtures/npm-spec/default')
+    it('should return the current version if the parameter is undefined', () => {
+      return expect(npmModule.incVersion()).to.eventually.equal('0.0.1')
+    })
     it('should return the specified version if the parameter is a valid version string', () => {
       return expect(npmModule.incVersion('1.5.2')).to.eventually.equal('1.5.2')
     })

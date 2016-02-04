@@ -105,21 +105,27 @@ describe('main-module:', () => {
 
   describe('the updateChangelog-method', () => {
     it('should create an initial CHANGELOG.md file for a first release', () => {
-      var changelogContents = thoughtful.updateChangelog('minor')
+      var changelogContents = thoughtful.updateChangelog({release: 'minor'})
         .then(() => qfs.read(workDir('CHANGELOG.md')))
       return expect(changelogContents).to.eventually.match(regexFixture('index-spec/CHANGELOG-first.md'))
     })
 
+    it('should create an initial CHANGELOG.md file for a current release', () => {
+      var changelogContents = thoughtful.updateChangelog()
+        .then(() => qfs.read(workDir('CHANGELOG.md')))
+      return expect(changelogContents).to.eventually.match(regexFixture('index-spec/CHANGELOG-current.md'))
+    })
+
     it('should update CHANGELOG.md file for a second release', () => {
       // Update changelog and bump version
-      var changelogContents = thoughtful.updateChangelog('minor')
+      var changelogContents = thoughtful.updateChangelog({release: 'minor'})
         .then(() => qcp.execFile('npm', ['version', 'minor'], {cwd: workDir()}))
         // Add another file
         .then(() => qfs.write(workDir('index.js'), "'use strict'"))
         .then(() => qcp.execFile('git', ['add', 'index.js'], {cwd: workDir()}))
         .then(() => qcp.execFile('git', ['commit', '-m', 'Added index.js'], {cwd: workDir()}))
         // Update changelog again and load contents
-        .then(() => thoughtful.updateChangelog('patch'))
+        .then(() => thoughtful.updateChangelog({release: 'patch'}))
         .then(() => qfs.read(workDir('CHANGELOG.md')))
 
       return expect(changelogContents).to.eventually.match(regexFixture('index-spec/CHANGELOG-second.md'))

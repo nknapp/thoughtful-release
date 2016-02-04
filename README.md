@@ -66,7 +66,7 @@ You can enforce the above workflow using git-hooks and `Thoughtful`. Have a look
 
 * [Thoughtful](#Thoughtful)
   * [new Thoughtful(cwd)](#new_Thoughtful_new)
-  * [.updateChangelog(release)](#Thoughtful+updateChangelog) ⇒ <code>Promise.&lt;?&gt;</code>
+  * [.updateChangelog([options])](#Thoughtful+updateChangelog) ⇒ <code>Promise.&lt;?&gt;</code>
   * [.rejectLockedBranches()](#Thoughtful+rejectLockedBranches) ⇒ <code>Promise.&lt;boolean&gt;</code>
   * [.sequenceEditor(filename)](#Thoughtful+sequenceEditor)
   * [.cleanupHistory(options)](#Thoughtful+cleanupHistory)
@@ -82,7 +82,7 @@ Return a new Thoughtful instance
 | cwd | <code>string</code> | the working directory of that instance |
 
 <a name="Thoughtful+updateChangelog"></a>
-#### thoughtful.updateChangelog(release) ⇒ <code>Promise.&lt;?&gt;</code>
+#### thoughtful.updateChangelog([options]) ⇒ <code>Promise.&lt;?&gt;</code>
 Update the CHANGELOG.md of the module in the given working directory.
 
 **Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
@@ -90,7 +90,10 @@ Update the CHANGELOG.md of the module in the given working directory.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| release | <code>string</code> | the release specification (as in `npm version`) |
+| [options] | <code>object</code> | optional parameters |
+| [options.release] | <code>string</code> | the release specification (as in `npm version`). If no value is provided, the current    version from the package.json will be used. This is useful, when the function is called by as npm-`version` script    in which case it is called after version bump but before committing the change. |
+| [options.openEditor] | <code>boolean</code> | if this value is true, the changelog-file will be opened in an editor before commiting to git.    The environment variable THOUGHTFUL_CHANGELOG_EDITOR may contain a custom command to open the editor. If this variable is not    set, the EDITOR variable or `vi` will be used. |
+| [options.addToGit] | <code>boolean</code> | if this value is true, the changelog-file will be staged in the git repository |
 
 <a name="Thoughtful+rejectLockedBranches"></a>
 #### thoughtful.rejectLockedBranches() ⇒ <code>Promise.&lt;boolean&gt;</code>

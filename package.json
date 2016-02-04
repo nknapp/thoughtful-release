@@ -38,6 +38,7 @@
     "lodash.contains": "^2.4.3",
     "lodash.defaults": "^3.1.2",
     "lodash.defaultsdeep": "^3.10.0",
+    "lodash.isplainobject": "^3",
     "lodash.isstring": "^3.0.1",
     "lodash.toarray": "^3.0.2",
     "moment": "^2.11.1",
