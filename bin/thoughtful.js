@@ -20,11 +20,11 @@ program
   .option('-a, --add-to-git', 'the version of the next release or `major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`')
   .description('update the CHANGELOG.md of the module in the current directory.')
   .action((options) => {
-    console.log(options)
     console.log('Updating changelog')
     thoughtful.updateChangelog({
       release: options.release,
-      addToGit: options.addToGit
+      addToGit: options.addToGit,
+      openEditor: options.openEditor
     }).done(console.log)
   })
 

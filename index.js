@@ -58,6 +58,11 @@ function Thoughtful (cwd) {
           // Store changelog
           .then((changes) => changelog.newRelease(version, new Date(), changes).save())
           .then(() => {
+            if (options.openEditor) {
+              return changelog.openEditor()
+            }
+          })
+          .then(() => {
             if (options.addToGit) {
               return git.add(changelog.file)
             }
