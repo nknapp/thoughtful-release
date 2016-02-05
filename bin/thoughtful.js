@@ -23,7 +23,8 @@ program
     console.log(options)
     console.log('Updating changelog')
     thoughtful.updateChangelog({
-      release: options.release
+      release: options.release,
+      addToGit: options.addToGit
     }).done(console.log)
   })
 
