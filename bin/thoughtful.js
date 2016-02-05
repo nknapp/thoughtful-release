@@ -18,7 +18,8 @@ program
   .command('changelog')
   .option('-r, --release <release>', 'the version of the next release or `major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`')
   .option('-a, --add-to-git', 'the version of the next release or `major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`')
-  .description('update the CHANGELOG.md of the module in the current directory.')
+  .option('-o, --open-editor', 'open the file CHANGELOG.md in an editor after the update, but before staging in the git-repository.')
+  .description('Update the file CHANGELOG.md of the module in the current directory.')
   .action((options) => {
     console.log('Updating changelog')
     thoughtful.updateChangelog({

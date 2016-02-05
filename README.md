@@ -39,7 +39,7 @@ Usage: thoughtful [options] [command]
 
   Commands:
 
-    changelog [options]              update the CHANGELOG.md of the module in the current directory.
+    changelog [options]              Update the file CHANGELOG.md of the module in the current directory.
     precommit                        Perform precommit-checks (locked branches...). Return non-zero exit-code if something is wrong
     sequence-editor <filename>       "Editor" for the rebase todos (replacing "pick" with "squash") with no interaction
     cleanup-history [target-branch]  Rebase the current branch onto another branch, condensing the whole branch into a single commit.
