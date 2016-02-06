@@ -22,9 +22,9 @@
   "preferGlobal": true,
   "license": "MIT",
   "scripts": {
-    "pretest": "standard --version || npm -g install standard",
+    "pretest": "standard --version || npm -g install standard@5",
     "test": "mocha && standard",
-    "preformat": "standard --version || npm -g install standard",
+    "preformat": "standard --version || npm -g install standard@5",
     "format": "standard --format",
     "thought": "thought run -a",
     "prethoughtcheck": "thought --version || npm -g install thought",
