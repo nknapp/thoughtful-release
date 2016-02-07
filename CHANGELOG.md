@@ -1,6 +1,14 @@
 # Release-Notes
 
 <a name="current-release"></a>
+# Version 0.3.0 (Sun, 07 Feb 2016 00:06:51 GMT)
+
+* [8a165ec](https://github.com/nknapp/thoughtful-release/commit/8a165ec) Let TravisCI install standard via pretest script. Use standard@5 - Nils Knappmeier
+* [625339b](https://github.com/nknapp/thoughtful-release/commit/625339b) Generate changelog on version bumps with "thoughtful" - Nils Knappmeier
+* [ecc0eec](https://github.com/nknapp/thoughtful-release/commit/ecc0eec) Ability to update changelog during version bump. - Nils Knappmeier
+
+
+
 # Version 0.2.3 (Thu, 28 Jan 2016 23:51:08 GMT)
 
 * [2eafc06](https://github.com/nknapp/thoughtful-release/commit/2eafc06) Minor documenation typos fixed - Nils Knappmeier
