@@ -47,7 +47,7 @@ program
   .command('cleanup-history [target-branch]')
   .description('Rebase the current branch onto another branch, condensing the whole branch into a single commit.')
   .action((targetBranch) => {
-    thoughtful.cleanupHistory({targetBranch: targetBranch}).done(() => console.log(`Cleanup complete`))
+    thoughtful.cleanupHistory({targetBranch: targetBranch}).done(() => console.log('Cleanup complete'))
   })
 
 program.parse(process.argv)

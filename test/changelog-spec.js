@@ -21,6 +21,7 @@ var expect = chai.expect
 var changelog = require('../lib/changelog.js')
 var qfs = require('q-io/fs')
 var path = require('path')
+require('trace')
 
 function fixture (filename) {
   return require('fs').readFileSync(path.join('test', 'fixtures', filename), {encoding: 'utf-8'})
@@ -58,7 +59,8 @@ describe('changelog-library:', () => {
     })
   })
 
-  describe('the save method', () => {
+  describe('the save method', function () {
+    this.timeout(5000)
     /**
      * Return the path to a file within the working dir
      *
@@ -85,7 +87,7 @@ describe('changelog-library:', () => {
     it('should be able to load, store a CHANGELOG.md file without modifying it.', () => {
       var changelogContents = qfs.copy('test/fixtures/changelog-with-a-release.md', workDir('CHANGELOG.md'))
         .then(() => changelog(workDir())
-            .save())
+          .save())
         .then(() => qfs.read(workDir('CHANGELOG.md')))
       return expect(changelogContents).to.eventually.equal(fixture('changelog-with-a-release.md'))
     })
@@ -93,8 +95,8 @@ describe('changelog-library:', () => {
     it('should be able to load a CHANGELOG.md and store a modified version', () => {
       var changelogContents = qfs.copy('test/fixtures/changelog-with-a-release.md', workDir('CHANGELOG.md'))
         .then(() => changelog(workDir())
-            .newRelease('2.0.0', new Date('2015-11-25T13:06:00Z'), '* Change 1\n* Change 2')
-            .save())
+          .newRelease('2.0.0', new Date('2015-11-25T13:06:00Z'), '* Change 1\n* Change 2')
+          .save())
         .then(() => qfs.read(workDir('CHANGELOG.md')))
       return expect(changelogContents).to.eventually.equal(fixture('changelog-with-two-releases.md'))
     })
@@ -124,10 +126,26 @@ describe('changelog-library:', () => {
 
     it('should call THOUGHTFUL_CHANGELOG_EDITOR as editor, if set', () => {
       const dummyEditor = path.resolve(__dirname, 'dummy-editor', 'dummy-editor.js')
-      process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = `${dummyEditor} changelog-editor`
-      process.env['EDITOR'] = `${dummyEditor} default-editor`
+      // Dummy editor prepends contents with first argument ("changelog editor")
+      process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = `node "${dummyEditor}" changelog-editor`
+      process.env['EDITOR'] = `node "${dummyEditor}" default-editor`
       var changelogContents = changelog(workDir()).openEditor()
         .then(() => qfs.read(workDir('CHANGELOG.md')))
+      return expect(changelogContents).to.eventually.equal(`changelog-editor
+
+# Release-Notes
+<a name="current-release"></a>
+`)
+    })
+
+    it('should call escape the changelog-path propery if it contains spaces', () => {
+      const dummyEditor = path.resolve(__dirname, 'dummy-editor', 'dummy-editor.js')
+      // Dummy editor prepends contents with first argument ("changelog editor")
+      process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = `node "${dummyEditor}" changelog-editor`
+
+      var changelogContents = qfs.makeTree(workDir('with spaces'))
+        .then(() => changelog(workDir('with spaces')).openEditor())
+        .then(() => qfs.read(workDir('with spaces/CHANGELOG.md')))
       return expect(changelogContents).to.eventually.equal(`changelog-editor
 
 # Release-Notes
@@ -138,7 +156,7 @@ describe('changelog-library:', () => {
     it('should call EDITOR as editor, if THOUGHTFUL_CHANGELOG_EDITOR is not set', () => {
       const dummyEditor = path.resolve(__dirname, 'dummy-editor', 'dummy-editor.js')
       process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = ''
-      process.env['EDITOR'] = `${dummyEditor} default-editor`
+      process.env['EDITOR'] = `node "${dummyEditor}" default-editor`
       var changelogContents = changelog(workDir()).openEditor()
         .then(() => qfs.read(workDir('CHANGELOG.md')))
       return expect(changelogContents).to.eventually.equal(`default-editor

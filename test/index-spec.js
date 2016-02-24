@@ -11,8 +11,12 @@
 // /* global xit */
 /* global beforeEach */
 /* global afterEach */
+/* global before */
+/* global after */
 
 'use strict'
+
+require('trace')
 
 var chai = require('chai')
 var chaiAsPromised = require('chai-as-promised')
@@ -70,7 +74,6 @@ describe('main-module:', () => {
 
   function gitCommit (file, contents, message) {
     return qfs.write(workDir(file), contents)
-      .then(() => qcp.execFile('ls', ['-l'], { cwd: workDir() }))
       .then(() => git('add', file))
       .then(() => git('commit', '-a', '-m', message))
   }
@@ -116,10 +119,13 @@ describe('main-module:', () => {
       return expect(changelogContents.then(normalize)).to.eventually.equal(fixture('index-spec/CHANGELOG-current.md'))
     })
 
-    it('should update CHANGELOG.md file for a second release', () => {
+    it('should update CHANGELOG.md file for a second release', function () {
+      this.timeout(5000)
       // Update changelog and bump version
       var changelogContents = thoughtful.updateChangelog({release: 'minor'})
         .then(() => qcp.execFile('npm', ['version', 'minor'], {cwd: workDir()}))
+        // On Windows, we need to call the '.cmd' file
+        .catch(() => qcp.execFile('npm.cmd', ['version', 'minor'], {cwd: workDir()}))
         // Add another file
         .then(() => qfs.write(workDir('index.js'), "'use strict'"))
         .then(() => qcp.execFile('git', ['add', 'index.js'], {cwd: workDir()}))
@@ -161,7 +167,7 @@ describe('main-module:', () => {
 
     it('should open an editor for the CHANGELOG.md file if openEditor is true', () => {
       const dummyEditor = path.resolve(__dirname, 'dummy-editor', 'dummy-editor.js')
-      process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = `${dummyEditor} changelog-editor`
+      process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = `node '${dummyEditor}' changelog-editor`
       var contents = thoughtful.updateChangelog({ openEditor: true })
         .then(() => qfs.read(workDir('CHANGELOG.md')))
       return expect(contents.then(normalize)).to.eventually.equal(fixture('index-spec/CHANGELOG-current-edited.md'))
@@ -191,10 +197,17 @@ describe('main-module:', () => {
     })
   })
 
-  describe('the cleanupHistory-method', () => {
+  describe('the cleanupHistory-method', function () {
+    before(() => {
+      // Git editor command that does keeps the commit-message complete (to some extent) and works on all platforms
+      process.env['GIT_EDITOR'] = `'${require.resolve('./dummy-git/commit-editor.sh').replace(/[\\]/g, '/$&')}' "Rebased commit"`
+    })
+    after(() => {
+      process.env['GIT_EDITOR'] = ''
+    })
+
+    this.timeout(30000)
     it('should rebase a branch onto the master ', () => {
-      // Git editor command that does not modify the commit message and works on all platforms
-      process.env['GIT_EDITOR'] = `${require.resolve('./dummy-git/commit-editor.js')} "Rebased commit"`
       thoughtful.reset()
       // Test setup: two feature branches forked from master~1
       return git('branch', 'feature1')
@@ -209,12 +222,10 @@ describe('main-module:', () => {
         .then(() => thoughtful.cleanupHistory({targetBranch: 'master', thoughtful: require.resolve('../bin/thoughtful.js')}))
         // Test conditions
         .then(() => expect(git('log', '--pretty===%s%n%b').then((output) => output.stdout.trim().replace(/\n+/g, '  ')))
-            .to.eventually.equal('==Rebased commit  Added file2  Modified file2  Added file3  ==Added file1.txt  ==Added package.json'))
+          .to.eventually.equal('==Rebased commit  Added file2  Modified file2  Added file3  ==Added file1.txt  ==Added package.json'))
     })
 
     it('should also work when no rebase is necessary in the end', () => {
-      // Git editor command that does not modify the commit message and works on all platforms
-      process.env['GIT_EDITOR'] = `${require.resolve('./dummy-git/commit-editor.js')} "Rebased commit"`
       thoughtful.reset()
       // Test setup: two feature branches forked from master~1
       return git('branch', 'feature1')
@@ -225,12 +236,10 @@ describe('main-module:', () => {
         .then(() => thoughtful.cleanupHistory({targetBranch: 'master', thoughtful: require.resolve('../bin/thoughtful.js')}))
         // Test conditions
         .then(() => expect(git('log', '--pretty===%s%n%b').then((output) => output.stdout.trim().replace(/\n+/g, '  ')))
-            .to.eventually.equal('==Rebased commit  Added file2  Modified file2  Added file3  ==Added package.json'))
+          .to.eventually.equal('==Rebased commit  Added file2  Modified file2  Added file3  ==Added package.json'))
     })
 
     it('should rebase a branch, that consists of a single commit, onto the master and offer to change the commit message', () => {
-      // Git editor command that does not modify the commit message and works on all platforms
-      process.env['GIT_EDITOR'] = `${require.resolve('./dummy-git/commit-editor.js')} "Rebased commit"`
       thoughtful.reset()
       // Test setup: two feature branches forked from master~1
       return git('branch', 'feature1')
@@ -240,7 +249,7 @@ describe('main-module:', () => {
         .then(() => thoughtful.cleanupHistory({targetBranch: 'master', thoughtful: require.resolve('../bin/thoughtful.js')}))
         // Test conditions
         .then(() => expect(git('log', '--pretty===%s%n%b').then((output) => output.stdout.trim().replace(/\n+/g, '  ')))
-            .to.eventually.equal('==Rebased commit  Added file2  ==Added file1.txt  ==Added package.json'))
+          .to.eventually.equal('==Rebased commit  Added file2  ==Added file1.txt  ==Added package.json'))
     })
   })
 

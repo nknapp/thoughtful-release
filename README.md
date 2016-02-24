@@ -1,8 +1,10 @@
 # thoughtful-release 
 
 [![NPM version](https://badge.fury.io/js/thoughtful-release.svg)](http://badge.fury.io/js/thoughtful-release)
-[![Build Status](https://travis-ci.org/nknapp/thoughtful-release.svg?branch=master)](https://travis-ci.org/nknapp/thoughtful-release)
-[![Coverage Status](https://img.shields.io/coveralls/nknapp/thoughtful-release.svg)](https://coveralls.io/r/nknapp/thoughtful-release)
+     [![Travis Build Status](https://travis-ci.org/nknapp/thoughtful-release.svg?branch=master)](https://travis-ci.org/nknapp/thoughtful-release)
+     [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/github/nknapp/thoughtful-release?svg=true&branch=master)](https://ci.appveyor.com/project/nknapp/thoughtful-release)
+  [![Coverage Status](https://img.shields.io/coveralls/nknapp/thoughtful-release.svg)](https://coveralls.io/r/nknapp/thoughtful-release)
+
 
 > Create high quality releases with less work
 

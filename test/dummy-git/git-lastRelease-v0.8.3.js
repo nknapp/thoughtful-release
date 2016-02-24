@@ -14,10 +14,10 @@ require('./mock-kit')({
   'log|--no-merges|--pretty=tformat:* %h %s - %an|v0.8.3..v0.8.5': {
     stdout: 'log|--no-merges|--pretty=tformat:* %h %s - %an|v0.8.3..v0.8.5'
   },
-  '-c|sequence.editor=thoughtful sequence-editor|rebase|--interactive|master': {
+  "-c|sequence.editor='thoughtful' sequence-editor|rebase|--interactive|master": {
     stdout: 'rebase onto master'
   },
-  '-c|sequence.editor=thoughtful sequence-editor|rebase|--interactive||stable': {
+  "-c|sequence.editor='thoughtful' sequence-editor|rebase|--interactive|stable": {
     stdout: 'rebase onto stable'
   },
   'merge-base|HEAD|master': {
@@ -26,10 +26,10 @@ require('./mock-kit')({
   'merge-base|HEAD|stable': {
     stdout: 'fork-point-stable'
   },
-  '-c|sequence.editor=thoughtful sequence-editor|rebase|--interactive|fork-point-stable': {
+  "-c|sequence.editor='thoughtful' sequence-editor|rebase|--interactive|fork-point-stable": {
     stdout: 'Squash to fork-point-stable'
   },
-  '-c|sequence.editor=thoughtful sequence-editor|rebase|--interactive|fork-point-master': {
+  "-c|sequence.editor='thoughtful' sequence-editor|rebase|--interactive|fork-point-master": {
     stdout: 'Squash to fork-point-master'
   },
   'rebase|stable': {
