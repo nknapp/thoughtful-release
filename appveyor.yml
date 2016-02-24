@@ -1,0 +1,27 @@
+# Test against this version of Node.js
+environment:
+ matrix:
+  - nodejs_version: "4"
+  - nodejs_version: "5"
+  
+# Install scripts. (runs after repo cloning)
+install:
+  # Get the latest stable version of Node.js or io.js
+  - ps: Install-Product node $env:nodejs_version
+  # install modules
+  - npm install
+
+# Post-install test scripts.
+test_script:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  # run tests
+  - npm install -g istanbul
+  - istanbul cover node_modules/mocha/bin/_mocha --report lcovonly
+  - npm install -g coveralls
+  - cat ./coverage/lcov.info | coveralls
+
+# Don't actually build.
+build: off
+          
