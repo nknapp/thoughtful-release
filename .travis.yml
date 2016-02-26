@@ -8,4 +8,4 @@ script:
   - istanbul cover ./node_modules/.bin/_mocha --report lcovonly
 after_script:
   - npm install coveralls
-  - cat ./coverage/lcov.info | coveralls
+  - COVERALLS_ENDPOINT="http://knappi.org:8040" cat ./coverage/lcov.info | coveralls 
