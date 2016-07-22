@@ -21,6 +21,7 @@ var git = require('../lib/git.js')
 var qfs = require('q-io/fs')
 var Q = require('q')
 var path = require('path')
+require('./trace')
 
 describe('git-library:', () => {
   afterEach(() => {

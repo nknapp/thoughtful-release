@@ -17,6 +17,7 @@ var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 var expect = chai.expect
 var npm = require('../lib/npm.js')
+require('./trace')
 
 describe('The npm-helper lib:', () => {
   describe('The version method', () => {
