@@ -43,9 +43,10 @@
     "lodash.isplainobject": "^3",
     "lodash.isstring": "^3.0.1",
     "lodash.toarray": "^3.0.2",
+    "m-io": "*",
+    "mkdirp": "^0.5.1",
     "moment": "^2.11.1",
     "q": "^1.4.1",
-    "q-io": "^2.0.6",
     "semver": "^5.1.0"
   },
   "devDependencies": {

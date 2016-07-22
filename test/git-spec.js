@@ -18,7 +18,7 @@ var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 var expect = chai.expect
 var git = require('../lib/git.js')
-var qfs = require('q-io/fs')
+var qfs = require('m-io/fs')
 var Q = require('q')
 var path = require('path')
 require('./trace')

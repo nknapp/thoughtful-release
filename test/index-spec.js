@@ -23,7 +23,7 @@ var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 var expect = chai.expect
 var qcp = require('../lib/q-child-process')
-var qfs = require('q-io/fs')
+var qfs = require('m-io/fs')
 var path = require('path')
 var Q = require('q')
 var _ = {
