@@ -19,9 +19,9 @@ var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 var expect = chai.expect
 var changelog = require('../lib/changelog.js')
-var qfs = require('q-io/fs')
+var qfs = require('m-io/fs')
 var path = require('path')
-require('trace')
+require('./trace')
 
 function fixture (filename) {
   return require('fs').readFileSync(path.join('test', 'fixtures', filename), {encoding: 'utf-8'})

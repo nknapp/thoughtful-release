@@ -16,14 +16,14 @@
 
 'use strict'
 
-require('trace')
+require('./trace')
 
 var chai = require('chai')
 var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 var expect = chai.expect
 var qcp = require('../lib/q-child-process')
-var qfs = require('q-io/fs')
+var qfs = require('m-io/fs')
 var path = require('path')
 var Q = require('q')
 var _ = {
@@ -123,9 +123,14 @@ describe('main-module:', () => {
       this.timeout(5000)
       // Update changelog and bump version
       var changelogContents = thoughtful.updateChangelog({release: 'minor'})
-        .then(() => qcp.execFile('npm', ['version', 'minor'], {cwd: workDir()}))
-        // On Windows, we need to call the '.cmd' file
-        .catch(() => qcp.execFile('npm.cmd', ['version', 'minor'], {cwd: workDir()}))
+        .then(() => {
+          if (process.platform.match(/^win/i)) {
+            // On Windows, we need to call the '.cmd' file
+            return qcp.execFile('npm.cmd', ['version', 'minor'], {cwd: workDir()})
+          } else {
+            return qcp.execFile('npm', ['version', 'minor'], {cwd: workDir()})
+          }
+        })
         // Add another file
         .then(() => qfs.write(workDir('index.js'), "'use strict'"))
         .then(() => qcp.execFile('git', ['add', 'index.js'], {cwd: workDir()}))
