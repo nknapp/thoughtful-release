@@ -1,6 +1,13 @@
 # Release-Notes
 
 <a name="current-release"></a>
+# Version 0.3.1 (Tue, 20 Dec 2016 09:10:33 GMT)
+
+* [d5ba1d9](https://github.com/nknapp/thoughtful-release/commit/d5ba1d9) Apply code style, fix node versions in TravisCI setup - Nils Knappmeier
+* [4d5f0ae](https://github.com/nknapp/thoughtful-release/commit/4d5f0ae) Use "m-io/fs" instead of "q-io/fs" - Nils Knappmeier
+* [81fe9a6](https://github.com/nknapp/thoughtful-release/commit/81fe9a6) Closes #3: Not Working on Windows - Nils Knappmeier
+
+
 # Version 0.3.0 (Sun, 07 Feb 2016 00:06:51 GMT)
 
 * [8a165ec](https://github.com/nknapp/thoughtful-release/commit/8a165ec) Let TravisCI install standard via pretest script. Use standard@5 - Nils Knappmeier

@@ -1,9 +1,10 @@
 # thoughtful-release 
 
 [![NPM version](https://badge.fury.io/js/thoughtful-release.svg)](http://badge.fury.io/js/thoughtful-release)
-     [![Travis Build Status](https://travis-ci.org/nknapp/thoughtful-release.svg?branch=master)](https://travis-ci.org/nknapp/thoughtful-release)
-     [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/github/nknapp/thoughtful-release?svg=true&branch=master)](https://ci.appveyor.com/project/nknapp/thoughtful-release)
-  [![Coverage Status](https://img.shields.io/coveralls/nknapp/thoughtful-release.svg)](https://coveralls.io/r/nknapp/thoughtful-release)
+[![Travis Build Status](https://travis-ci.org/nknapp/thoughtful-release.svg?branch=master)](https://travis-ci.org/nknapp/thoughtful-release)
+[![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/github/nknapp/thoughtful-release?svg=true&branch=master)]
+(https://ci.appveyor.com/project/nknapp/thoughtful-release)
+[![Coverage Status](https://img.shields.io/coveralls/nknapp/thoughtful-release.svg)](https://coveralls.io/r/nknapp/thoughtful-release)
 
 
 > Create high quality releases with less work
@@ -63,19 +64,21 @@ You can enforce the above workflow using git-hooks and `Thoughtful`. Have a look
 ##  API-reference
 
 <a name="Thoughtful"></a>
-### Thoughtful
+
+## Thoughtful
 **Kind**: global class  
 
 * [Thoughtful](#Thoughtful)
-  * [new Thoughtful(cwd)](#new_Thoughtful_new)
-  * [.updateChangelog([options])](#Thoughtful+updateChangelog) ⇒ <code>Promise.&lt;?&gt;</code>
-  * [.rejectLockedBranches()](#Thoughtful+rejectLockedBranches) ⇒ <code>Promise.&lt;boolean&gt;</code>
-  * [.sequenceEditor(filename)](#Thoughtful+sequenceEditor)
-  * [.cleanupHistory(options)](#Thoughtful+cleanupHistory)
-  * [.reset()](#Thoughtful+reset)
+    * [new Thoughtful(cwd)](#new_Thoughtful_new)
+    * [.updateChangelog([options])](#Thoughtful+updateChangelog) ⇒ <code>Promise.&lt;?&gt;</code>
+    * [.rejectLockedBranches()](#Thoughtful+rejectLockedBranches) ⇒ <code>Promise.&lt;boolean&gt;</code>
+    * [.sequenceEditor(filename)](#Thoughtful+sequenceEditor)
+    * [.cleanupHistory(options)](#Thoughtful+cleanupHistory)
+    * [.reset()](#Thoughtful+reset)
 
 <a name="new_Thoughtful_new"></a>
-#### new Thoughtful(cwd)
+
+### new Thoughtful(cwd)
 Return a new Thoughtful instance
 
 
@@ -84,7 +87,8 @@ Return a new Thoughtful instance
 | cwd | <code>string</code> | the working directory of that instance |
 
 <a name="Thoughtful+updateChangelog"></a>
-#### thoughtful.updateChangelog([options]) ⇒ <code>Promise.&lt;?&gt;</code>
+
+### thoughtful.updateChangelog([options]) ⇒ <code>Promise.&lt;?&gt;</code>
 Update the CHANGELOG.md of the module in the given working directory.
 
 **Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
@@ -98,7 +102,8 @@ Update the CHANGELOG.md of the module in the given working directory.
 | [options.addToGit] | <code>boolean</code> | if this value is true, the changelog-file will be staged in the git repository |
 
 <a name="Thoughtful+rejectLockedBranches"></a>
-#### thoughtful.rejectLockedBranches() ⇒ <code>Promise.&lt;boolean&gt;</code>
+
+### thoughtful.rejectLockedBranches() ⇒ <code>Promise.&lt;boolean&gt;</code>
 Throw an exception if the current branch is listed in `package.json` under
 `$.thoughtful.lockedBranches`.
 
@@ -109,7 +114,8 @@ The branch check can be disabled by setting the environment variable
 **Returns**: <code>Promise.&lt;boolean&gt;</code> - true, if the branch is not locked.  
 **Throw**: <code>Error</code> if the branch is locked  
 <a name="Thoughtful+sequenceEditor"></a>
-#### thoughtful.sequenceEditor(filename)
+
+### thoughtful.sequenceEditor(filename)
 For use with "git -c sequence.editor=..." when rebasing and squashing feature-branches
 
 Replace "pick" commits in rebase-todo-file by "squash" (except the first).
@@ -121,7 +127,8 @@ Replace "pick" commits in rebase-todo-file by "squash" (except the first).
 | filename | the name of the file to be edited |
 
 <a name="Thoughtful+cleanupHistory"></a>
-#### thoughtful.cleanupHistory(options)
+
+### thoughtful.cleanupHistory(options)
 Perform a rebase of the current (topic-)branch onto a target-branch, condensing the
 whole branch into a single commit.
 
@@ -134,7 +141,8 @@ whole branch into a single commit.
 | [options.thoughtful] | <code>string</code> | the command to invoke "thoughtful" (default: process.argv[1]) |
 
 <a name="Thoughtful+reset"></a>
-#### thoughtful.reset()
+
+### thoughtful.reset()
 Reset and reload the cached parts of Thoughtful
 
 **Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  

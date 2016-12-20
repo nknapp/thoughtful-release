@@ -1,6 +1,6 @@
 {
   "name": "thoughtful-release",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Create high quality releases with less work",
   "repository": {
     "type": "git",
@@ -61,7 +61,7 @@
     "lib",
     "LICENSE.md"
   ],
-  "standard": { 
+  "standard": {
     "ignore": [
       "spec/fixtures/**"
     ]
