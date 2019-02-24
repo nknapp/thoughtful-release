@@ -41,7 +41,6 @@
     "lodash.isplainobject": "^4.0.6",
     "lodash.isstring": "^4.0.1",
     "lodash.toarray": "^4.4.0",
-    "loud-rejection": "^1.6.0",
     "moment": "^2.24.0",
     "semver": "^5.6.0"
   },
