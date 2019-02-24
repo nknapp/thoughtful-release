@@ -3,13 +3,12 @@
 /*!
  * thoughtful-release <https://github.com/nknapp/thoughtful-release>
  *
- * Copyright (c) 2015 Nils Knappmeier.
+ * Copyright (c) 2019 Nils Knappmeier.
  * Released under the MIT license.
  */
 
 'use strict'
 
-var Q = require('q')
 var _ = {
   contains: require('lodash.contains'),
   isPlainObject: require('lodash.isplainobject')
@@ -51,10 +50,10 @@ function Thoughtful (cwd) {
     // Determine repository url
     const repoUrlP = npm.repositoryUrl
 
-    return Q.all([versionP, releaseInfoP, repoUrlP])
-      .spread((version, releaseInfo, repoUrl) => {
+    return Promise.all([versionP, releaseInfoP, repoUrlP])
+      .then(([version, releaseInfo, repoUrl]) => {
         // Determine changes since current version tag
-        return git.changes(releaseInfo.tag, {url: repoUrl})
+        return git.changes(releaseInfo.tag, { url: repoUrl })
           // Store changelog
           .then((changes) => changelog.newRelease(version, new Date(), changes).save())
           .then(() => {
@@ -83,11 +82,11 @@ function Thoughtful (cwd) {
    */
   this.rejectLockedBranches = function rejectLockedBranches () {
     if (process.env['THOUGHTFUL_LOCKED_BRANCHES'] === 'false') {
-      return Q(true)
+      return Promise.resolve(true)
     }
     this.reset()
-    return Q.all([git.currentBranch(), npm.lockedBranches()])
-      .spread((current, lockedBranches) => {
+    return Promise.all([git.currentBranch(), npm.lockedBranches()])
+      .then(([current, lockedBranches]) => {
         return _.contains(lockedBranches, current) ? current : null
       })
       .then((branch) => {

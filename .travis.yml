@@ -1,12 +1,25 @@
 sudo: false
+cache:
+  directories:
+    - node_modules
 language: "node_js"
-node_js: 
-  - "4"
-  - "6"
-  - "7"
+node_js:
+  - "node"
+  - "lts/*"
+  - "8"
+matrix: 
+  include:
+    - node_js: "lts/*"
+      env: STATIC_CHECKS=true
 script:
-  - npm install istanbul
-  - istanbul cover ./node_modules/.bin/_mocha --report lcovonly
+  - |
+    if [ "${STATIC_CHECKS}" = "true" ]; then
+      # Just perform static checks and exit
+      eslint --max-warnings 0 .
+      exit 0
+    fi
+  - nyc mocha
 after_script:
   - npm install coveralls
-  - cat ./coverage/lcov.info | coveralls
+  - nyc report --reporter=text-lcov | coveralls
+  

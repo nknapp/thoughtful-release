@@ -3,9 +3,11 @@
 /*!
  * thoughtful-release <https://github.com/nknapp/thoughtful-release>
  *
- * Copyright (c) 2015 Nils Knappmeier.
+ * Copyright (c) 2019 Nils Knappmeier.
  * Released under the MIT license.
  */
+
+/* eslint-disable no-console */
 
 // Small library to make handling dummy-calls to git easier.
 

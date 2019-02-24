@@ -1,14 +1,11 @@
 /*!
  * thoughtful-release <https://github.com/nknapp/thoughtful-release>
  *
- * Copyright (c) 2015 Nils Knappmeier.
+ * Copyright (c) 2019 Nils Knappmeier.
  * Released under the MIT license.
  */
 
-/* global describe */
-/* global it */
-// /* global xdescribe */
-// /* global xit */
+/* eslint-env mocha */
 
 'use strict'
 

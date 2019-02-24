@@ -1,15 +1,11 @@
 /*!
  * thoughtful-release <https://github.com/nknapp/thoughtful-release>
  *
- * Copyright (c) 2015 Nils Knappmeier.
+ * Copyright (c) 2019 Nils Knappmeier.
  * Released under the MIT license.
  */
 
-/* global describe */
-// /* global afterEach */
-/* global it */
-// /* global xdescribe */
-// /* global xit */
+/* eslint-env mocha */
 
 'use strict'
 
@@ -18,7 +14,7 @@ var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 var expect = chai.expect
 var path = require('path')
-var qcp = require('../lib/q-child-process')
+var qcp = require('../lib/promised-child-process')
 
 describe('q-child-process-library:', () => {
   describe('the spawn-method', () => {

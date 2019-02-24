@@ -6,18 +6,15 @@ SYNOPSIS
 ```
 Usage: thoughtful [options] [command]
 
+Options:
+  -V, --version                    output the version number
+  -h, --help                       output usage information
 
-  Commands:
-
-    changelog [options]              Update the file CHANGELOG.md of the module in the current directory.
-    precommit                        Perform precommit-checks (locked branches...). Return non-zero exit-code if something is wrong
-    sequence-editor <filename>       "Editor" for the rebase todos (replacing "pick" with "squash") with no interaction
-    cleanup-history [target-branch]  Rebase the current branch onto another branch, condensing the whole branch into a single commit.
-
-  Options:
-
-    -h, --help     output usage information
-    -V, --version  output the version number
+Commands:
+  changelog [options]              Update the file CHANGELOG.md of the module in the current directory.
+  precommit                        Perform precommit-checks (locked branches...). Return non-zero exit-code if something is wrong
+  sequence-editor <filename>       "Editor" for the rebase todos (replacing "pick" with "squash") with no interaction
+  cleanup-history [target-branch]  Rebase the current branch onto another branch, condensing the whole branch into a single commit.
 ```
 
 A tool to support maintenance tasks in small npm-modules.

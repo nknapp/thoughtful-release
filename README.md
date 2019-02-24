@@ -1,11 +1,9 @@
 # thoughtful-release 
 
-[![NPM version](https://badge.fury.io/js/thoughtful-release.svg)](http://badge.fury.io/js/thoughtful-release)
+[![NPM version](https://img.shields.io/npm/v/thoughtful-release.svg)](https://npmjs.com/package/thoughtful-release)
 [![Travis Build Status](https://travis-ci.org/nknapp/thoughtful-release.svg?branch=master)](https://travis-ci.org/nknapp/thoughtful-release)
-[![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/github/nknapp/thoughtful-release?svg=true&branch=master)]
-(https://ci.appveyor.com/project/nknapp/thoughtful-release)
+[![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/github/nknapp/thoughtful-release?svg=true&branch=master)](https://ci.appveyor.com/project/nknapp/thoughtful-release)
 [![Coverage Status](https://img.shields.io/coveralls/nknapp/thoughtful-release.svg)](https://coveralls.io/r/nknapp/thoughtful-release)
-
 
 > Create high quality releases with less work
 
@@ -34,23 +32,26 @@ npm install -g thoughtful-release
 
 ### CLI options
 
+# NodeJS compatibility notes
+
+This package will always support the latest version of NodeJS and as well as
+the current LTS version. In the future, it will not be considered a breaking
+change to drop support of a pre-LTS version of NodeJS.
+
 Calling `thoughtful --help` will print a command-line reference:
 
 ```
 Usage: thoughtful [options] [command]
 
+Options:
+  -V, --version                    output the version number
+  -h, --help                       output usage information
 
-  Commands:
-
-    changelog [options]              Update the file CHANGELOG.md of the module in the current directory.
-    precommit                        Perform precommit-checks (locked branches...). Return non-zero exit-code if something is wrong
-    sequence-editor <filename>       "Editor" for the rebase todos (replacing "pick" with "squash") with no interaction
-    cleanup-history [target-branch]  Rebase the current branch onto another branch, condensing the whole branch into a single commit.
-
-  Options:
-
-    -h, --help     output usage information
-    -V, --version  output the version number
+Commands:
+  changelog [options]              Update the file CHANGELOG.md of the module in the current directory.
+  precommit                        Perform precommit-checks (locked branches...). Return non-zero exit-code if something is wrong
+  sequence-editor <filename>       "Editor" for the rebase todos (replacing "pick" with "squash") with no interaction
+  cleanup-history [target-branch]  Rebase the current branch onto another branch, condensing the whole branch into a single commit.
 ```
 
 Please refer to the [command line reference](man/thoughtful.md) of this project for 
@@ -61,103 +62,19 @@ details about the commands.
 You can enforce the above workflow using git-hooks and `Thoughtful`. Have a look at 
 [the git-workflow](docs/git-workflow.md)-document.
 
-##  API-reference
-
-<a name="Thoughtful"></a>
-
-## Thoughtful
-**Kind**: global class  
-
-* [Thoughtful](#Thoughtful)
-    * [new Thoughtful(cwd)](#new_Thoughtful_new)
-    * [.updateChangelog([options])](#Thoughtful+updateChangelog) ⇒ <code>Promise.&lt;?&gt;</code>
-    * [.rejectLockedBranches()](#Thoughtful+rejectLockedBranches) ⇒ <code>Promise.&lt;boolean&gt;</code>
-    * [.sequenceEditor(filename)](#Thoughtful+sequenceEditor)
-    * [.cleanupHistory(options)](#Thoughtful+cleanupHistory)
-    * [.reset()](#Thoughtful+reset)
-
-<a name="new_Thoughtful_new"></a>
-
-### new Thoughtful(cwd)
-Return a new Thoughtful instance
 
 
-| Param | Type | Description |
-| --- | --- | --- |
-| cwd | <code>string</code> | the working directory of that instance |
+# License
 
-<a name="Thoughtful+updateChangelog"></a>
+`thoughtful-release` is published under the MIT-license.
 
-### thoughtful.updateChangelog([options]) ⇒ <code>Promise.&lt;?&gt;</code>
-Update the CHANGELOG.md of the module in the given working directory.
-
-**Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
-**Returns**: <code>Promise.&lt;?&gt;</code> - a promise for finishing writing the changelog  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [options] | <code>object</code> | optional parameters |
-| [options.release] | <code>string</code> | the release specification (as in `npm version`). If no value is provided, the current    version from the package.json will be used. This is useful, when the function is called by as npm-`version` script    in which case it is called after version bump but before committing the change. |
-| [options.openEditor] | <code>boolean</code> | if this value is true, the changelog-file will be opened in an editor before commiting to git.    The environment variable THOUGHTFUL_CHANGELOG_EDITOR may contain a custom command to open the editor. If this variable is not    set, the EDITOR variable or `vi` will be used. |
-| [options.addToGit] | <code>boolean</code> | if this value is true, the changelog-file will be staged in the git repository |
-
-<a name="Thoughtful+rejectLockedBranches"></a>
-
-### thoughtful.rejectLockedBranches() ⇒ <code>Promise.&lt;boolean&gt;</code>
-Throw an exception if the current branch is listed in `package.json` under
-`$.thoughtful.lockedBranches`.
-
-The branch check can be disabled by setting the environment variable
-`THOUGHTFUL_LOCKED_BRANCHES=false`
-
-**Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
-**Returns**: <code>Promise.&lt;boolean&gt;</code> - true, if the branch is not locked.  
-**Throw**: <code>Error</code> if the branch is locked  
-<a name="Thoughtful+sequenceEditor"></a>
-
-### thoughtful.sequenceEditor(filename)
-For use with "git -c sequence.editor=..." when rebasing and squashing feature-branches
-
-Replace "pick" commits in rebase-todo-file by "squash" (except the first).
-
-**Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
-
-| Param | Description |
-| --- | --- |
-| filename | the name of the file to be edited |
-
-<a name="Thoughtful+cleanupHistory"></a>
-
-### thoughtful.cleanupHistory(options)
-Perform a rebase of the current (topic-)branch onto a target-branch, condensing the
-whole branch into a single commit.
-
-**Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| options | <code>object</code> | options to this function |
-| [options.targetBranch] | <code>string</code> | the branch to rebase the current branch upon (default: master) |
-| [options.thoughtful] | <code>string</code> | the command to invoke "thoughtful" (default: process.argv[1]) |
-
-<a name="Thoughtful+reset"></a>
-
-### thoughtful.reset()
-Reset and reload the cached parts of Thoughtful
-
-**Kind**: instance method of <code>[Thoughtful](#Thoughtful)</code>  
-
-
-
-## License
-
-`thoughtful-release` is published under the MIT-license. 
 See [LICENSE.md](LICENSE.md) for details.
 
-## Release-Notes
+
+# Release-Notes
  
 For release notes, see [CHANGELOG.md](CHANGELOG.md)
  
-## Contributing guidelines
+# Contributing guidelines
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).

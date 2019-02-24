@@ -1,15 +1,11 @@
 /*!
  * thoughtful-release <https://github.com/nknapp/thoughtful-release>
  *
- * Copyright (c) 2015 Nils Knappmeier.
+ * Copyright (c) 2019 Nils Knappmeier.
  * Released under the MIT license.
  */
 
-/* global describe */
-/* global afterEach */
-/* global it */
-// /* global xdescribe */
-// /* global xit */
+/* eslint-env mocha */
 
 'use strict'
 
@@ -18,8 +14,7 @@ var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 var expect = chai.expect
 var git = require('../lib/git.js')
-var qfs = require('m-io/fs')
-var Q = require('q')
+var fs = require('fs-extra')
 var path = require('path')
 
 describe('git-library:', () => {
@@ -134,36 +129,36 @@ describe('git-library:', () => {
 
   describe('the squashRebaseTodo-method', () => {
     it('should replace all "pick" with "squash" in the file, except the first one', () => {
-      var actual = qfs.makeTree('tmp/git-squash-rebase-todo')
-        .then(() => qfs.copy('test/fixtures/git-rebase-todo.txt', 'tmp/git-squash-rebase-todo/git-rebase-todo.txt'))
+      var actual = fs.mkdirp('tmp/git-squash-rebase-todo')
+        .then(() => fs.copy('test/fixtures/git-rebase-todo.txt', 'tmp/git-squash-rebase-todo/git-rebase-todo.txt'))
         .then(() => git('test').squashRebaseTodos('tmp/git-squash-rebase-todo/git-rebase-todo.txt'))
-        .then(() => qfs.read('tmp/git-squash-rebase-todo/git-rebase-todo.txt'))
-      var expected = qfs.read('test/fixtures/git-rebase-todo-target.txt')
-      return Q.all([actual, expected])
-        .spread((actual, expected) => expect(actual).to.equal(expected))
+        .then(() => fs.readFile('tmp/git-squash-rebase-todo/git-rebase-todo.txt', 'utf-8'))
+      var expected = fs.readFile('test/fixtures/git-rebase-todo-target.txt', 'utf-8')
+      return Promise.all([actual, expected])
+        .then(([actual, expected]) => expect(actual).to.equal(expected))
     })
 
     it('should replace a single "pick" with "reword" in the file', () => {
-      var actual = qfs.makeTree('tmp/git-squash-rebase-todo')
-        .then(() => qfs.copy('test/fixtures/git-rebase-todo-single.txt', 'tmp/git-squash-rebase-todo/git-rebase-todo-single.txt'))
+      var actual = fs.mkdirp('tmp/git-squash-rebase-todo')
+        .then(() => fs.copy('test/fixtures/git-rebase-todo-single.txt', 'tmp/git-squash-rebase-todo/git-rebase-todo-single.txt'))
         .then(() => git('test').squashRebaseTodos('tmp/git-squash-rebase-todo/git-rebase-todo-single.txt'))
-        .then(() => qfs.read('tmp/git-squash-rebase-todo/git-rebase-todo-single.txt'))
-      var expected = qfs.read('test/fixtures/git-rebase-todo-single-target.txt')
-      return Q.all([actual, expected])
-        .spread((actual, expected) => expect(actual).to.equal(expected))
+        .then(() => fs.readFile('tmp/git-squash-rebase-todo/git-rebase-todo-single.txt', 'utf-8'))
+      var expected = fs.readFile('test/fixtures/git-rebase-todo-single-target.txt', 'utf-8')
+      return Promise.all([actual, expected])
+        .then(([actual, expected]) => expect(actual).to.equal(expected))
     })
   })
 
   describe('the cleanupHistory-method', () => {
     it('should rebase and squash the branch onto master by default', () => {
       git.mockCmd = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-v0.8.3.js')
-      return expect(git('test').cleanupHistory({thoughtful: 'thoughtful'}))
+      return expect(git('test').cleanupHistory({ thoughtful: 'thoughtful' }))
         .to.eventually.equal('Tagging thoughtful-backup\nRebase on master')
     })
 
     it('should rebase and squash the branch onto stable if specified as targetBranch', () => {
       git.mockCmd = path.resolve(__dirname, 'dummy-git', 'git-lastRelease-v0.8.3.js')
-      return expect(git('test').cleanupHistory({targetBranch: 'stable', thoughtful: 'thoughtful'}))
+      return expect(git('test').cleanupHistory({ targetBranch: 'stable', thoughtful: 'thoughtful' }))
         .to.eventually.equal('Tagging thoughtful-backup\nRebase on stable')
     })
   })
