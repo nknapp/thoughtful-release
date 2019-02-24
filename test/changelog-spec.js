@@ -22,7 +22,7 @@ var changelog = require('../lib/changelog.js')
 var fs = require('fs-extra')
 var path = require('path')
 
-function fixture(filename) {
+function fixture (filename) {
   return require('fs').readFileSync(path.join('test', 'fixtures', filename), { encoding: 'utf-8' })
 }
 
@@ -55,7 +55,7 @@ describe('changelog-library:', () => {
       return fs.mkdirp(path.join(workdir, 'CHANGELOG.md'))
         .then(() => changelog(workdir).contents)
         .then(
-          () => expect.fail("Should throw an error"),
+          () => expect.fail('Should throw an error'),
           (err) => {
             return expect(err.code).to.equal('EISDIR')
           })
@@ -68,7 +68,7 @@ describe('changelog-library:', () => {
      * Return the path to a file within the working dir
      *
      */
-    function workDir() {
+    function workDir () {
       const argsAsArray = Array.prototype.slice.apply(arguments)
       return path.join.apply(path, ['tmp', 'test', 'changelog'].concat(argsAsArray))
     }
@@ -110,7 +110,7 @@ describe('changelog-library:', () => {
      * Return the path to a file within the working dir
      *
      */
-    function workDir() {
+    function workDir () {
       const argsAsArray = Array.prototype.slice.apply(arguments)
       return path.join.apply(path, ['tmp', 'test', 'changelog-editor'].concat(argsAsArray))
     }

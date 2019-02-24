@@ -54,7 +54,7 @@ function Thoughtful (cwd) {
     return Q.all([versionP, releaseInfoP, repoUrlP])
       .spread((version, releaseInfo, repoUrl) => {
         // Determine changes since current version tag
-        return git.changes(releaseInfo.tag, {url: repoUrl})
+        return git.changes(releaseInfo.tag, { url: repoUrl })
           // Store changelog
           .then((changes) => changelog.newRelease(version, new Date(), changes).save())
           .then(() => {

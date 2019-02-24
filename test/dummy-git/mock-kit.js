@@ -7,6 +7,8 @@
  * Released under the MIT license.
  */
 
+/* eslint-disable no-console */
+
 // Small library to make handling dummy-calls to git easier.
 
 /**

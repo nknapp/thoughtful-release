@@ -7,7 +7,7 @@
  * Released under the MIT license.
  */
 
-'use strict'
+/* eslint-disable no-console */
 
 const program = require('commander')
 const Thoughtful = require('../index.js')
@@ -51,7 +51,7 @@ program
   .description('Rebase the current branch onto another branch, condensing the whole branch into a single commit.')
   .action((targetBranch) => {
     thoughtful.cleanupHistory({ targetBranch: targetBranch })
-    .then(() => console.log('Cleanup complete'), console.error)
+      .then(() => console.log('Cleanup complete'), console.error)
   })
 
 program.parse(process.argv)
