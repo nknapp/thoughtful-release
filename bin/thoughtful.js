@@ -26,28 +26,32 @@ program
       release: options.release,
       addToGit: options.addToGit,
       openEditor: options.openEditor
-    }).done(console.log)
+    })
+      .then(console.log, console.error)
   })
 
 program
   .command('precommit')
   .description('Perform precommit-checks (locked branches...). Return non-zero exit-code if something is wrong')
   .action(() => {
-    thoughtful.rejectLockedBranches().done(console.log)
+    thoughtful.rejectLockedBranches()
+      .then(console.log, console.error)
   })
 
 program
   .command('sequence-editor <filename>')
   .description('"Editor" for the rebase todos (replacing "pick" with "squash") with no interaction')
   .action((filename) => {
-    thoughtful.sequenceEditor(filename).done(() => console.log(`File ${filename} written.`))
+    thoughtful.sequenceEditor(filename)
+      .then(() => console.log(`File ${filename} written.`), console.error)
   })
 
 program
   .command('cleanup-history [target-branch]')
   .description('Rebase the current branch onto another branch, condensing the whole branch into a single commit.')
   .action((targetBranch) => {
-    thoughtful.cleanupHistory({targetBranch: targetBranch}).done(() => console.log('Cleanup complete'))
+    thoughtful.cleanupHistory({ targetBranch: targetBranch })
+    .then(() => console.log('Cleanup complete'), console.error)
   })
 
 program.parse(process.argv)

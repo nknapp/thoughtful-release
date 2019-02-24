@@ -19,12 +19,11 @@ var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 var expect = chai.expect
 var changelog = require('../lib/changelog.js')
-var qfs = require('m-io/fs')
+var fs = require('fs-extra')
 var path = require('path')
-require('trace')
 
-function fixture (filename) {
-  return require('fs').readFileSync(path.join('test', 'fixtures', filename), {encoding: 'utf-8'})
+function fixture(filename) {
+  return require('fs').readFileSync(path.join('test', 'fixtures', filename), { encoding: 'utf-8' })
 }
 
 // Exception handler that ignores ENOENT and re-throws everything else
@@ -53,9 +52,13 @@ describe('changelog-library:', () => {
       var workdir = path.join('tmp', 'test', 'changelog-error')
 
       // Create CHANGELOG.md as directory, so that it can't be read.
-      var promise = qfs.makeTree(path.join(workdir, 'CHANGELOG.md'))
-        .then(() => changelog(workdir).contents())
-      return expect(promise).to.be.rejected
+      return fs.mkdirp(path.join(workdir, 'CHANGELOG.md'))
+        .then(() => changelog(workdir).contents)
+        .then(
+          () => expect.fail("Should throw an error"),
+          (err) => {
+            return expect(err.code).to.equal('EISDIR')
+          })
     })
   })
 
@@ -65,39 +68,39 @@ describe('changelog-library:', () => {
      * Return the path to a file within the working dir
      *
      */
-    function workDir () {
+    function workDir() {
       const argsAsArray = Array.prototype.slice.apply(arguments)
       return path.join.apply(path, ['tmp', 'test', 'changelog'].concat(argsAsArray))
     }
 
     // Clear the working directory before each test
     beforeEach(() => {
-      return qfs.removeTree(workDir())
+      return fs.remove(workDir())
         .catch(ignoreENOENT)
-        .then(() => qfs.makeTree(workDir()))
+        .then(() => fs.mkdirp(workDir()))
     })
 
     it('should store the current state into the CHANGELOG.md file', () => {
       var changelogContents = changelog(workDir()).save()
-        .then(() => qfs.read(workDir('CHANGELOG.md')))
+        .then(() => fs.readFile(workDir('CHANGELOG.md'), 'utf-8'))
 
       return expect(changelogContents).to.eventually.equal(fixture('changelog-empty.md'))
     })
 
     it('should be able to load, store a CHANGELOG.md file without modifying it.', () => {
-      var changelogContents = qfs.copy('test/fixtures/changelog-with-a-release.md', workDir('CHANGELOG.md'))
+      var changelogContents = fs.copy('test/fixtures/changelog-with-a-release.md', workDir('CHANGELOG.md'))
         .then(() => changelog(workDir())
           .save())
-        .then(() => qfs.read(workDir('CHANGELOG.md')))
+        .then(() => fs.readFile(workDir('CHANGELOG.md'), 'utf-8'))
       return expect(changelogContents).to.eventually.equal(fixture('changelog-with-a-release.md'))
     })
 
     it('should be able to load a CHANGELOG.md and store a modified version', () => {
-      var changelogContents = qfs.copy('test/fixtures/changelog-with-a-release.md', workDir('CHANGELOG.md'))
+      var changelogContents = fs.copy('test/fixtures/changelog-with-a-release.md', workDir('CHANGELOG.md'))
         .then(() => changelog(workDir())
           .newRelease('2.0.0', new Date('2015-11-25T13:06:00Z'), '* Change 1\n* Change 2')
           .save())
-        .then(() => qfs.read(workDir('CHANGELOG.md')))
+        .then(() => fs.readFile(workDir('CHANGELOG.md'), 'utf-8'))
       return expect(changelogContents).to.eventually.equal(fixture('changelog-with-two-releases.md'))
     })
   })
@@ -107,16 +110,16 @@ describe('changelog-library:', () => {
      * Return the path to a file within the working dir
      *
      */
-    function workDir () {
+    function workDir() {
       const argsAsArray = Array.prototype.slice.apply(arguments)
       return path.join.apply(path, ['tmp', 'test', 'changelog-editor'].concat(argsAsArray))
     }
 
     // Clear the working directory before each test
     beforeEach(() => {
-      return qfs.removeTree(workDir())
+      return fs.remove(workDir())
         .catch(ignoreENOENT)
-        .then(() => qfs.makeTree(workDir()))
+        .then(() => fs.mkdirp(workDir()))
     })
 
     afterEach(() => {
@@ -130,7 +133,7 @@ describe('changelog-library:', () => {
       process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = `node "${dummyEditor}" changelog-editor`
       process.env['EDITOR'] = `node "${dummyEditor}" default-editor`
       var changelogContents = changelog(workDir()).openEditor()
-        .then(() => qfs.read(workDir('CHANGELOG.md')))
+        .then(() => fs.readFile(workDir('CHANGELOG.md'), 'utf-8'))
       return expect(changelogContents).to.eventually.equal(`changelog-editor
 
 # Release-Notes
@@ -143,9 +146,9 @@ describe('changelog-library:', () => {
       // Dummy editor prepends contents with first argument ("changelog editor")
       process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = `node "${dummyEditor}" changelog-editor`
 
-      var changelogContents = qfs.makeTree(workDir('with spaces'))
+      var changelogContents = fs.mkdirp(workDir('with spaces'))
         .then(() => changelog(workDir('with spaces')).openEditor())
-        .then(() => qfs.read(workDir('with spaces/CHANGELOG.md')))
+        .then(() => fs.readFile(workDir('with spaces/CHANGELOG.md'), 'utf-8'))
       return expect(changelogContents).to.eventually.equal(`changelog-editor
 
 # Release-Notes
@@ -158,7 +161,7 @@ describe('changelog-library:', () => {
       process.env['THOUGHTFUL_CHANGELOG_EDITOR'] = ''
       process.env['EDITOR'] = `node "${dummyEditor}" default-editor`
       var changelogContents = changelog(workDir()).openEditor()
-        .then(() => qfs.read(workDir('CHANGELOG.md')))
+        .then(() => fs.readFile(workDir('CHANGELOG.md'), 'utf-8'))
       return expect(changelogContents).to.eventually.equal(`default-editor
 
 # Release-Notes
