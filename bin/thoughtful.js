@@ -8,6 +8,7 @@
  */
 
 /* eslint-disable no-console */
+/* istanbul ignore file */
 
 const program = require('commander')
 const Thoughtful = require('../index.js')
