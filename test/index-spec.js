@@ -16,7 +16,6 @@ var expect = chai.expect
 var qcp = require('../lib/q-child-process')
 var fs = require('fs-extra')
 var path = require('path')
-var Q = require('q')
 var _ = {
   escapeRegExp: require('lodash.escaperegexp'),
   toArray: require('lodash.toarray')
@@ -250,8 +249,8 @@ describe('main-module:', () => {
         .then(() => thoughtful.sequenceEditor(workDir('git-rebase-todo')))
         .then(() => fs.readFile(workDir('git-rebase-todo'), 'utf-8'))
       var expected = fs.readFile('test/fixtures/git-rebase-todo-target.txt', 'utf-8')
-      return Q.all([actual, expected])
-        .spread((actual, expected) => expect(actual).to.equal(expected))
+      return Promise.all([actual, expected])
+        .then(([actual, expected]) => expect(actual).to.equal(expected))
     })
 
     it('should reject files other than "git-rebase-todo"', () => {

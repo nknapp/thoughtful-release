@@ -15,7 +15,6 @@ chai.use(chaiAsPromised)
 var expect = chai.expect
 var git = require('../lib/git.js')
 var fs = require('fs-extra')
-var Q = require('q')
 var path = require('path')
 
 describe('git-library:', () => {
@@ -135,8 +134,8 @@ describe('git-library:', () => {
         .then(() => git('test').squashRebaseTodos('tmp/git-squash-rebase-todo/git-rebase-todo.txt'))
         .then(() => fs.readFile('tmp/git-squash-rebase-todo/git-rebase-todo.txt', 'utf-8'))
       var expected = fs.readFile('test/fixtures/git-rebase-todo-target.txt', 'utf-8')
-      return Q.all([actual, expected])
-        .spread((actual, expected) => expect(actual).to.equal(expected))
+      return Promise.all([actual, expected])
+        .then(([actual, expected]) => expect(actual).to.equal(expected))
     })
 
     it('should replace a single "pick" with "reword" in the file', () => {
@@ -145,8 +144,8 @@ describe('git-library:', () => {
         .then(() => git('test').squashRebaseTodos('tmp/git-squash-rebase-todo/git-rebase-todo-single.txt'))
         .then(() => fs.readFile('tmp/git-squash-rebase-todo/git-rebase-todo-single.txt', 'utf-8'))
       var expected = fs.readFile('test/fixtures/git-rebase-todo-single-target.txt', 'utf-8')
-      return Q.all([actual, expected])
-        .spread((actual, expected) => expect(actual).to.equal(expected))
+      return Promise.all([actual, expected])
+        .then(([actual, expected]) => expect(actual).to.equal(expected))
     })
   })
 

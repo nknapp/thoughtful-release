@@ -43,7 +43,6 @@
     "lodash.toarray": "^4.4.0",
     "loud-rejection": "^1.6.0",
     "moment": "^2.24.0",
-    "q": "^1.5.1",
     "semver": "^5.6.0"
   },
   "devDependencies": {
