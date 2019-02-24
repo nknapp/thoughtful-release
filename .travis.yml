@@ -6,6 +6,7 @@ language: "node_js"
 node_js:
   - "node"
   - "lts/*"
+  - "8"
 matrix: 
   include:
     - node_js: "lts/*"
