@@ -17,3 +17,16 @@ details about the commands.
 
 You can enforce the above workflow using git-hooks and `Thoughtful`. Have a look at 
 [the git-workflow](docs/git-workflow.md)-document.
+
+### Generate changelog
+
+You can use the command `thoughtful-release -o -a` as a version script in the `package.json`.
+On version bumps, a CHANGELOG.md is then automatically generated from git commits.
+Before it is commited to the git repository, an editor is opened to let you review and modify the changelog.
+
+The editor-command is taken from environment variables 
+
+* `${THOUGHTFUL_CHANGELOG_EDITOR}`
+* with a fallback to `${EDITOR}`
+* with a fallback to `vi`.
+
