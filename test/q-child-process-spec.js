@@ -14,7 +14,7 @@ var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 var expect = chai.expect
 var path = require('path')
-var qcp = require('../lib/q-child-process')
+var qcp = require('../lib/promised-child-process')
 
 describe('q-child-process-library:', () => {
   describe('the spawn-method', () => {

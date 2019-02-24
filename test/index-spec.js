@@ -13,7 +13,7 @@ var chai = require('chai')
 var chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised)
 var expect = chai.expect
-var qcp = require('../lib/q-child-process')
+var qcp = require('../lib/promised-child-process')
 var fs = require('fs-extra')
 var path = require('path')
 var _ = {
