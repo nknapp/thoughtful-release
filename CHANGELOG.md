@@ -1,6 +1,28 @@
 # Release-Notes
 
 <a name="current-release"></a>
+# Version 1.0.0 (Sun, 24 Feb 2019 12:59:54 GMT)
+
+Docs:
+* [d97db3b](https://github.com/nknapp/thoughtful-release/commit/d97db3b) docs: document THOUGHTFUL_CHANGELOG_EDITOR variable - Nils Knappmeier
+
+Refactor
+* [f5b0f34](https://github.com/nknapp/thoughtful-release/commit/f5b0f34) refactor: rename q-child-process to promised-child-process - Nils Knappmeier
+* [2f19859](https://github.com/nknapp/thoughtful-release/commit/2f19859) refactor: replace Q by native promises - Nils Knappmeier
+* [b531bf2](https://github.com/nknapp/thoughtful-release/commit/b531bf2) refactor: use fs-extra instead of m-io - Nils Knappmeier
+
+Test/Chore: 
+* [78bf866](https://github.com/nknapp/thoughtful-release/commit/78bf866) test: run travis with Node 8... - Nils Knappmeier
+* [e1c6d31](https://github.com/nknapp/thoughtful-release/commit/e1c6d31) test: remove loud-rejection, activate trace and clarify - Nils Knappmeier
+* [9de3805](https://github.com/nknapp/thoughtful-release/commit/9de3805) test: ignore "difficult to test" code in coverage - Nils Knappmeier
+* [40bd2f7](https://github.com/nknapp/thoughtful-release/commit/40bd2f7) chore: various chore, drop support for pre-LTS node - Nils Knappmeier
+* [c4f077a](https://github.com/nknapp/thoughtful-release/commit/c4f077a) chore: Update copyright notice - Nils Knappmeier
+* [5736162](https://github.com/nknapp/thoughtful-release/commit/5736162) chore(package): update dependencies - greenkeeper[bot]
+* [9107402](https://github.com/nknapp/thoughtful-release/commit/9107402) chore: use "eslint-env mocha" where needed - Nils Knappmeier
+
+Breaking changes:
+* Drop support for pre-LTS node. In the future, only LTS and active versions of NodeJS will be supported
+
 # Version 0.3.1 (Tue, 20 Dec 2016 09:10:33 GMT)
 
 * [d5ba1d9](https://github.com/nknapp/thoughtful-release/commit/d5ba1d9) Apply code style, fix node versions in TravisCI setup - Nils Knappmeier
