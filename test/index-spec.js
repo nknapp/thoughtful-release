@@ -5,14 +5,7 @@
  * Released under the MIT license.
  */
 
-/* global describe */
-/* global it */
-// /* global xdescribe */
-// /* global xit */
-/* global beforeEach */
-/* global afterEach */
-/* global before */
-/* global after */
+/* eslint-env mocha */
 
 'use strict'
 

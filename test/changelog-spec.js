@@ -5,14 +5,7 @@
  * Released under the MIT license.
  */
 
-/* global describe */
-/* global it */
-// /* global xdescribe */
-// /* global xit */
-/* global beforeEach */
-/* global afterEach */
-
-'use strict'
+/* eslint-env mocha */
 
 var chai = require('chai')
 var chaiAsPromised = require('chai-as-promised')
